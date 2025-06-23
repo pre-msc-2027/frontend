@@ -1,3 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-myblue: oklch(0.5192 0.182 256.69);
+  --color-myblack: oklch(0.1572 0.0267 199.35);
+  --color-mypink: oklch(0.6244 0.2235 8.55);
+  --color-mywhite: oklch(0.963 0.0025 345.21);
+  --color-mycream: oklch(0.9143 0.0452 36.72);
+  --color-sidebar: oklch(0.2183 0.0372 252.78);
+}
+
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -41,13 +54,9 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
