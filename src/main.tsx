@@ -2,10 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
-import Dashboard from "./Dashboard.tsx";
+import HomePage from "./LoginPage.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Dashboard/>
+    <HomePage/>
   </StrictMode>,
 )
