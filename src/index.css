@@ -1,15 +1,3 @@
-@import "tailwindcss";
-
-@theme {
-  --color-myblue: oklch(0.5192 0.182 256.69);
-  --color-myblack: oklch(0.1572 0.0267 199.35);
-  --color-mypink: oklch(0.6244 0.2235 8.55);
-  --color-mywhite: oklch(0.963 0.0025 345.21);
-  --color-mycream: oklch(0.9143 0.0452 36.72);
-}
-
-
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -28,10 +16,47 @@
 
 
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  place-items: center;
+  flex-direction: column;
+}
+
+
+#root,
+.main-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
