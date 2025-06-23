@@ -1,12 +1,30 @@
-import React from "react";
-import './AnimatedBlob.css';
+import React, { type ReactNode } from 'react';
+import './Blob.css';
 
-const AnimatedBlob: React.FC = () => {
+type BlobProps = {
+    children?: ReactNode;
+    colors?: string[];
+};
+
+const defaultColors = [
+    'rgb(0,100,206)',
+    'rgb(237,47,108)',
+    'rgb(0,100,206)'
+];
+
+const Blob: React.FC<BlobProps> = ({ children, colors = defaultColors }) => {
     return (
-        <div className="blob-container">
-            <div className="blob" />
+        <div className="blob-wrapper">
+            {colors.map((color, index) => (
+                <div
+                    key={index}
+                    className={`blob blob-${index + 1}`}
+                    style={{ background: color }}
+                />
+            ))}
+            {children}
         </div>
     );
 };
 
-export default AnimatedBlob;
+export default Blob;
