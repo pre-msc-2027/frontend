@@ -46,8 +46,9 @@
 
 .grid-item {
     width: 100%;
-    color: white;
+    color: rgba(255, 255, 255, 0);
     padding: 20px;
+    border: #ed2f6c;
     border-radius: 8px;
     box-sizing: border-box;
     display: flex;
