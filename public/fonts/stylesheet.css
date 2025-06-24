@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'Mint Round';
+    src: url('MintRound.eot');
+    src: local('Mint Round'), local('MintRound'),
+        url('MintRound.eot?#iefix') format('embedded-opentype'),
+        url('MintRound.woff2') format('woff2'),
+        url('MintRound.woff') format('woff'),
+        url('MintRound.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mint Round - Inline';
+    src: url('MintRoundInline.eot');
+    src: local('Mint Round - Inline'), local('MintRoundInline'),
+        url('MintRoundInline.eot?#iefix') format('embedded-opentype'),
+        url('MintRoundInline.woff2') format('woff2'),
+        url('MintRoundInline.woff') format('woff'),
+        url('MintRoundInline.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mint Round - Outline';
+    src: url('MintRoundOutline.eot');
+    src: local('Mint Round - Outline'), local('MintRoundOutline'),
+        url('MintRoundOutline.eot?#iefix') format('embedded-opentype'),
+        url('MintRoundOutline.woff2') format('woff2'),
+        url('MintRoundOutline.woff') format('woff'),
+        url('MintRoundOutline.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+

@@ -22,7 +22,7 @@ const Blob: React.FC<BlobProps> = ({ children, colors = defaultColors }) => {
                     style={{ background: color }}
                 />
             ))}
-            <div className="blob-content">{children}</div>
+            {children}
         </div>
     );
 };
