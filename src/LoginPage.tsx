@@ -2,10 +2,9 @@ import React from 'react';
 import Blob from './Component/Blob.tsx';
 import Launcher from './Component/Launcher.tsx';
 import './LoginPage.css';
-import Launcher from "./Component/Launcher.tsx";
 import { loginWithGitHub } from "./Api/service/authServices.ts";
 
-const Home: React.FC = () => {
+const LoginPage: React.FC = () => {
     const handleLogin = () => {
         loginWithGitHub();
     }
