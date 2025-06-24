@@ -1,20 +1,20 @@
 import "./Dashboard.css";
+import MenuRepo from "./Component/MenuRepo.tsx";
 import React from "react";
-import './Dashboard.css'
 
-const GridExample: React.FC = () => {
+const Dashboard: React.FC = () => {
     return (
+        <div className="w-screen h-screen flex">
+            <div className="w-1/6 h-4/6 flex self-center m-4">
+                <MenuRepo>
 
-        <>
 
-            <div> Hello world</div>
-            <div className="grid-container-dashboard">
-                <div className="grid-item-dashboard left">1/6</div>
-                <div className="grid-item-dashboard mid">4/6</div>
-                <div className="grid-item-dashboard right">2/6</div>
+                </MenuRepo>
             </div>
-        </>
-    );
-}
+            <div>
 
-export default GridExample;
+            </div>
+        </div>
+    );
+};
+export default Dashboard;
