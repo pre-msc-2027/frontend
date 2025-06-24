@@ -1,11 +1,21 @@
-.grid-container {
+.grid-container-dashboard {
     display: grid;
     grid-template-columns: 1fr 4fr 2fr;
     gap: 10px;
 }
 
-.grid-item {
+.grid-item-dashboard {
     border: 1px solid #333;
     padding: 10px;
     text-align: center;
+}
+
+.grid-item-dashboard .left {
+    background-color: #ed2f6c;
+}
+.grid-item-dashboard .middle{
+    background-color: #0064ce;
+}
+.grid-item-dashboard right{
+    background-color: #747bff;
 }
