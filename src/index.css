@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 /*Dark theme*/
@@ -21,7 +21,6 @@
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
 
 
 :root {
