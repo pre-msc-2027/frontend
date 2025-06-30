@@ -8,6 +8,7 @@ const Dashboard: React.FC = () => {
             <div className="w-1/6 h-4/6 flex self-center m-4">
                 <MenuRepo>
 
+
                 </MenuRepo>
             </div>
             <div>
