@@ -31,14 +31,6 @@ const options = {
     plugins: {
         legend: {
             display: false,
-            position: (context: any) => {
-                const width = window.innerWidth;
-                if (width >= 1024) {
-                    return 'right';
-                } else {
-                    return 'bottom';
-                }
-            },
             labels: {
                 color: '#FFFFFF',
                 font: {
@@ -58,7 +50,6 @@ const options = {
     animation: {
         animateRotate: true,
         duration: 1200,
-        easing: 'easeOutCirc',
     },
     layout: {
         padding: 15,
