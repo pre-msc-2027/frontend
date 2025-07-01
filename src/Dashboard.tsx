@@ -1,9 +1,6 @@
 import "./Dashboard.css";
 import React from "react";
 import PieChart from "./Component/PieChart.tsx";
-import LogsDashboard from "./Component/LogsDashboard.tsx";
-import RulesCard from "./Component/RulesCard.tsx";
-import Navbar from "./Component/NavBar.tsx";
 
 
 const Dashboard: React.FC = () => {
