@@ -52,4 +52,4 @@ export default tseslint.config({
   },
 })
 ```
-![front](https://github.com/user-attachments/assets/25a7ac3a-b024-47f4-b456-ad3e32ba14e4)
+
