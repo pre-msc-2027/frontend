@@ -1,13 +1,32 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+/*Dark theme*/
+@theme{
+  --color-primary: oklch(0.3756 0.0556 245.99);
+  --color-secondary: oklch(0.6244 0.2235 8.55);
+  --color-bg: oklch(0.2749 0.0188 258.37);
+  --color-bgsecondary: oklch(0.3623 0.0154 259.81);
+  --color-text: oklch(0.9196 0.0072 0);
+}
+/* Light theme*/
+@layer base {
+  [data-theme="light"] {
+    --color-primary: oklch(0.5192 0.182 256.69);
+    --color-secondary: oklch(0.6244 0.2235 8.55);
+    --color-bg: oklch(0.9881 0 0);
+    --color-bgsecondary: oklch(0.9581 0 0);
+    --color-text: oklch(0.9196 0.0072 0);
+  }
+}
+
+
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -52,13 +71,9 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -72,8 +87,8 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #0064CE;
+    background-color: #F4F2F3;
   }
   a:hover {
     color: #747bff;

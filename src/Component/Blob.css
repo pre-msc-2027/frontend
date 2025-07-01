@@ -26,12 +26,15 @@
 }
 
 .blob-2 {
+    bottom: 200px;
+    right: -100px;
     top: 20%;
 
     animation-delay: 10s;
 }
 
 .blob-3 {
+    top: 0;
 
     top: 5%;
     left: 15%;
