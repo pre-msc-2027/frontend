@@ -5,7 +5,7 @@ import Dashboard from './Dashboard';
 import Profile from './ProfilePage.tsx';
 import PrivateRoute from './Component/PrivateRoute.tsx';
 import LoginPage from './LoginPage.tsx';
-import Navbar from "./Component/NavBar.tsx";
+
 
 function App() {
     const location = useLocation();
@@ -26,8 +26,7 @@ function App() {
 
     return (
         <>
-            {shouldShowNavbar && <Navbar />}
-
+        <div className="bg-bg w-screen h-screen">
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route
@@ -88,6 +87,7 @@ function App() {
                     />
                 </Routes>
             </AnimatePresence>
+        </div>
         </>
     );
 }
