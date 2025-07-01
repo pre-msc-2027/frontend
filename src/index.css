@@ -6,7 +6,7 @@
 @theme{
   --color-primary: oklch(0.3756 0.0556 245.99);
   --color-secondary: oklch(0.6244 0.2235 8.55);
-  --color-bg: oklch(0.2749 0.0188 258.37);
+  --color-bg: oklch(0 0 0);
   --color-bgsecondary: oklch(0.3623 0.0154 259.81);
   --color-text: oklch(0.9196 0.0072 0);
 }
@@ -15,7 +15,7 @@
   [data-theme="light"] {
     --color-primary: oklch(0.5192 0.182 256.69);
     --color-secondary: oklch(0.6244 0.2235 8.55);
-    --color-bg: oklch(0.9881 0 0);
+    --color-bg: oklch(1 0 0);
     --color-bgsecondary: oklch(0.9581 0 0);
     --color-text: oklch(0.9196 0.0072 0);
   }
