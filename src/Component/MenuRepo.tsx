@@ -4,7 +4,7 @@ import Repo from "./Repo.tsx";
 
 const MenuRepo: React.FC = () => {
     return (
-        <div className="flex flex-col bg-primary rounded-lg p-4 h-full max-h-screen overflow-hidden">
+        <div className="flex flex-col bg-primary rounded-lg p-4 h-full h-2/4 overflow-hidden">
             <div className="text-center mb-2">
                 <p className="text-xl text-text">GitHub Repositories</p>
             </div>
