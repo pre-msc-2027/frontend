@@ -28,7 +28,6 @@
     transition: opacity 1s 1s ;
 }
 .card-description{
-    display: block;
     font-size: small;
     margin-bottom: 0.25rem;
 }

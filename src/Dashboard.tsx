@@ -5,6 +5,7 @@ import PieChart from "./Component/PieChart.tsx";
 
 const Dashboard: React.FC = () => {
     return (
+
         <div className="h-screen flex flex-col">
             {/* Header */}
             <div className="h-1/8 flex flex-row justify-between m-4">
@@ -16,6 +17,8 @@ const Dashboard: React.FC = () => {
                 <div className="w-2/5 bg-secondary">
 
                 </div>
+
+
             </div>
 
             {/* White Bar */}

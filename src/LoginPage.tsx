@@ -13,10 +13,10 @@ const LoginPage: React.FC = () => {
             <div className="blob-content">
                 <div className="grid-container">
                     <div className="grid-item">
-                        <Launcher />
+                        <Launcher  />
                     </div>
                     <div className="grid-item">
-                        <h1>Welcome to <span>SecuScan</span></h1>
+                        <h1>Welcome to <br/><span>SecuScan</span></h1>
                         <p>To get started, log in with your GitHub account.</p>
                         <p>This site allows you to deploy any web project easily and efficiently.</p>
                         <button className="github-button" onClick={handleLogin}>
