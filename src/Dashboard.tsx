@@ -8,7 +8,7 @@ import RulesCard from "./Component/RulesCard.tsx";
 const Dashboard: React.FC = () => {
     return (
         <div className="h-screen flex flex-col lg:flex-row p-4">
-            <div className="hidden lg:flex w-ful lg:w-1/6 h-4/6 self-center">
+            <div className="hidden lg:flex w-full lg:w-1/6 h-4/6 self-center">
                 <MenuRepo>
                 </MenuRepo>
             </div>
