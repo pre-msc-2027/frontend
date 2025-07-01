@@ -34,9 +34,9 @@ const options = {
             position: (context: any) => {
                 const width = window.innerWidth;
                 if (width >= 1024) {
-                    return 'right'; // lg: légende à droite
+                    return 'right';
                 } else {
-                    return 'bottom'; // md et sm: légende en bas
+                    return 'bottom';
                 }
             },
             labels: {
@@ -67,7 +67,7 @@ const options = {
 
 const PieChart: React.FC = () => {
     return (
-        <div className="lg:w-full lg:h-full flex justify-center items-center rounded-lg bg-sidebar p-4 overflow-hidden flex-col">
+        <div className="lg:w-full lg:h-full flex justify-center items-center rounded-lg p-4 overflow-hidden flex-col bg-bgsecondary text-text">
             <h2 className="text-2xl mt-4 p-2">Analysis summary</h2>
             <Doughnut data={data} options={options} />
         </div>
