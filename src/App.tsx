@@ -9,8 +9,6 @@ import LoginPage from './LoginPage.tsx';
 
 function App() {
     const location = useLocation();
-    const hideNavbarOn = ['/login'];
-    const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
 
     // Animation variants for page transitions
     const pageVariants = {
