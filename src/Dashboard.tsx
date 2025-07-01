@@ -1,32 +1,60 @@
 import "./Dashboard.css";
-import MenuRepo from "./Component/MenuRepo.tsx";
 import React from "react";
 import PieChart from "./Component/PieChart.tsx";
 import LogsDashboard from "./Component/LogsDashboard.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
+import Navbar from "./Component/NavBar.tsx";
+
 
 const Dashboard: React.FC = () => {
     return (
-        <div className="h-screen flex flex-col lg:flex-row p-4">
-            <div className="hidden lg:flex w-ful lg:w-1/6 h-4/6 self-center">
-                <MenuRepo>
-                </MenuRepo>
+        <div className="h-screen flex flex-col">
+            {/* Header */}
+            <div className="h-1/8 flex flex-row justify-between m-4">
+                {/* Search Bar */}
+                <div className="w-3/5 bg-primary">
+
+                </div>
+                {/* NavBar */}
+                <div className="w-2/5 bg-secondary">
+
+                </div>
             </div>
-                <div className="lg:w-5/6 flex justify-center flex-col lg:flex-row lg:items-stretch items-center p-4">
-                    <div className="flex flex-col md:flex-row lg:flex-col">
-                        <div className="p-2 w-full md:w-2/4 lg:w-full">
-                            <PieChart/>
+
+            {/* White Bar */}
+            <div className="h-1 w-3/5 bg-secondary self-center"></div>
+
+            {/* Main Content */}
+            <div className="flex-grow m-4">
+                <div className="flex flex-row h-full gap-4">
+                    {/* Left Side */}
+                    <div className="w-3/5 bg-secondary h-full flex flex-row">
+                        {/* Content for the left side */}
+                        <div className="w-2/4 h-7/10 bg-primary">
+                            <div className="h-2/6 bg-secondary">
+                                {/*Buttons*/}
+                            </div>
+                            <div className="h-4/6 flex flex-col items-center p-2 rounded-lg bg-bgsecondary">
+                                {/* Pie Chart */}
+                                <div className="h-9/10 w-full">
+                                    <PieChart />
+                                </div>
+                                <div className="h-1/10 justify-start w-full">
+                                    <p className="text-2xl text-white">Analyse</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="p-2 w-full md:w-2/4 lg:w-full">
-                            <RulesCard/>
+                        <div className="w-2/4 h-7/10 bg-bgsecondary">
+
                         </div>
                     </div>
-
-                    <div className="w-full md:2/4 lg:w-4/6 lg:h-4/6 m-4">
-                        <LogsDashboard/>
+                    {/* Right Side */}
+                    <div className="w-2/5 bg-primary h-full">
+                        {/* Content for the right side */}
                     </div>
                 </div>
             </div>
-            );
-            };
-            export default Dashboard;
+        </div>
+    );
+};
+export default Dashboard;
