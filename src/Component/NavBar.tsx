@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './NavBar.css';
-import { Home, User, LayoutDashboard, Sun, Moon } from 'lucide-react';
+import { Home, LayoutDashboard, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
