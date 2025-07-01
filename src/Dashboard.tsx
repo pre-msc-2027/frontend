@@ -3,7 +3,6 @@ import MenuRepo from "./Component/MenuRepo.tsx";
 import React from "react";
 import PieChart from "./Component/PieChart.tsx";
 import LogsDashboard from "./Component/LogsDashboard.tsx";
-import ButtonsCard from "./Component/ButtonsCard.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
 
 const Dashboard: React.FC = () => {
