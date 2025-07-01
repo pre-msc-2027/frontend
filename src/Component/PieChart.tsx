@@ -25,9 +25,9 @@ const data = {
 };
 
 const options = {
-    responsive: false,
+    responsive: true,
     maintainAspectRatio: false,
-    cutout: '70%',
+    cutout: '60%',
     plugins: {
         legend: {
             display: false,
@@ -52,16 +52,13 @@ const options = {
         duration: 1200,
     },
     layout: {
-        padding: 15,
+        padding: 30,
     },
 };
 
 const PieChart: React.FC = () => {
     return (
-        <div className="lg:w-full lg:h-full flex justify-center items-center rounded-lg p-4 overflow-hidden flex-col bg-bgsecondary text-text">
-            <h2 className="text-2xl mt-4 p-2">Analysis summary</h2>
-            <Doughnut data={data} options={options} />
-        </div>
+        <Doughnut data={data} options={options}/>
     );
 };
 
