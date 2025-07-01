@@ -28,7 +28,6 @@ const Home: React.FC = () => {
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             required/>
-                        <button type="submit">Analyze Repository</button>
                     </form>
 
                     <div className="progress-bar">
