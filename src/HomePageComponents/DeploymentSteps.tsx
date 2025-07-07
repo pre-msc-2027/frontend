@@ -68,7 +68,7 @@ export const DeploymentSteps: React.FC<DeploymentStepsProps> = ({
     }
   ];
 
-  const getStepStyles = (step: Step, index: number) => {
+  const getStepStyles = (step: Step) => {
     const baseStyles = "relative flex flex-col items-center text-center transition-all duration-500";
     
     switch (step.status) {
@@ -98,29 +98,16 @@ export const DeploymentSteps: React.FC<DeploymentStepsProps> = ({
     }
   };
 
-  const getConnectorStyles = (step: Step, nextStep?: Step) => {
-    if (!nextStep) return '';
-    
-    const isCompleted = step.status === 'completed';
-    const isActive = step.status === 'active' || nextStep.status === 'active';
-    
-    return `absolute top-6 left-1/2 w-full h-0.5 transition-all duration-500 ${
-      isCompleted ? 'bg-green-500' : 
-      isActive ? 'bg-blue-500' : 'bg-slate-600'
-    }`;
-  };
-
   return (
     <div className="max-w-4xl mx-auto mt-12 mb-8">
       <div className="relative">
         <div className="flex justify-between items-start">
-          {steps.map((step, index) => {
+          {steps.map((step) => {
             const StepIcon = step.icon;
-            const nextStep = steps[index + 1];
             
             return (
               <div key={step.id} className="flex-1 relative">
-                <div className={getStepStyles(step, index)}>
+                <div className={getStepStyles(step)}>
                   <div className={getIconStyles(step)}>
                     {step.status === 'completed' ? (
                       <CheckCircle className="w-6 h-6" />
@@ -141,18 +128,11 @@ export const DeploymentSteps: React.FC<DeploymentStepsProps> = ({
                     'bg-slate-600'
                   }`} />
                 </div>
-                
-                {/* Connector line
-                {nextStep && (
-                  <div className={getConnectorStyles(step, nextStep)} />
-                )} */}
               </div>
             );
           })}
         </div>
-        
-        {/* Progress bar background
-        <div className="absolute top-6 left-0 right-0 h-0.5 bg-slate-700 -z-10" /> */}
+  
       </div>
       
       {/* Status message */}
