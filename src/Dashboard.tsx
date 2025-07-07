@@ -7,6 +7,7 @@ import RulesCard from "./Component/RulesCard.tsx";
 const Dashboard: React.FC = () => {
     return (
 
+
         <div className="h-screen flex flex-col">
             {/* Header */}
             <div className="h-1/8 flex flex-row justify-between m-4">
@@ -49,9 +50,11 @@ const Dashboard: React.FC = () => {
                             <RulesCard/>
                         </div>
                     </div>
+
                     {/* Right Side */}
                     <div className="w-2/5 bg-primary h-full">
                         {/* Content for the right side */}
+
                     </div>
                 </div>
             </div>
