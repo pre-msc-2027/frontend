@@ -4,15 +4,13 @@ import Home from './HomePage.tsx';
 import Dashboard from './Dashboard';
 import Profile from './ProfilePage.tsx';
 import PrivateRoute from './Component/PrivateRoute.tsx';
-import LoginPage from './LoginPage.tsx';
 import Navbar from "./Component/NavBar.tsx";
+import RepoBranchSelector from "./Component/SelectBar.tsx";
+import React from "react";
 
 function App() {
     const location = useLocation();
-    const hideNavbarOn = ['/login'];
-    const shouldShowNavbar = !hideNavbarOn.includes(location.pathname);
 
-    // Animation variants for page transitions
     const pageVariants = {
         initial: { opacity: 0, y: 20 },
         animate: { opacity: 1, y: 0 },
@@ -26,7 +24,8 @@ function App() {
 
     return (
         <>
-            {shouldShowNavbar && <Navbar />}
+             <Navbar />
+            <RepoBranchSelector/>
 
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
@@ -69,20 +68,6 @@ function App() {
                                 transition={pageTransition}
                             >
                                 <PrivateRoute><Profile /></PrivateRoute>
-                            </motion.div>
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            <motion.div
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <LoginPage />
                             </motion.div>
                         }
                     />
