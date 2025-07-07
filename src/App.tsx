@@ -8,6 +8,7 @@ import Navbar from "./Component/NavBar.tsx";
 import RepoBranchSelector from "./Component/SelectBar.tsx";
 import React from "react";
 
+
 function App() {
     const location = useLocation();
 
@@ -27,6 +28,7 @@ function App() {
              <Navbar />
             <RepoBranchSelector/>
 
+        <div className="bg-bg w-screen h-screen">
             <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
                     <Route
@@ -73,6 +75,7 @@ function App() {
                     />
                 </Routes>
             </AnimatePresence>
+        </div>
         </>
     );
 }
