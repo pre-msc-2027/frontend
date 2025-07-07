@@ -42,7 +42,7 @@ export const ProcessingSteps: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-br from-sky-85 via-indigo-40 to-gray-100 py-20 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold text-gray-900 mb-4">
             Step-by-Step Process
@@ -52,16 +52,17 @@ export const ProcessingSteps: React.FC = () => {
           </p>
         </div>
 
-        <div className="relative flex flex-col justify-center items-center max-w-3xl mx-auto">
-          {steps.map((step, index) => (
-            <StepItem
-              key={index}
-              step={step}
-              index={index}
-              isVisible={index < visibleSteps}
-            />
-          ))}
+        <div className="relative flex flex-row justify-center items-start gap-12 max-w-6xl mx-auto px-4">
+        {steps.map((step, index) => (
+          <StepItem
+            key={index}
+            step={step}
+            index={index}
+            isVisible={index < visibleSteps}
+          />
+        ))}
         </div>
+
       </div>
     </div>
   );

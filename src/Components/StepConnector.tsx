@@ -7,8 +7,9 @@ interface StepConnectorProps {
 
 const StepConnector: React.FC<StepConnectorProps> = ({ show }) => (
   show ? (
-    <div className="absolute left-6 top-14 w-0.5 h-16 bg-gradient-to-b from-gray-200 to-gray-300 group-hover:from-gray-300 group-hover:to-gray-400 transition-all duration-300"></div>
+    <div className="absolute top-6 left-12 h-0.5 w-24 bg-gradient-to-r from-gray-200 to-gray-300" />
   ) : null
 );
+
 
 export default StepConnector;
