@@ -53,7 +53,7 @@ export const Hero: React.FC = () => {
       <CodeBackground />
 
       {/* Background patterns */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      <div className="absolute inset-0 " />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/30" />
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
