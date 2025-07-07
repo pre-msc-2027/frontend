@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './HomePage.css';
-import { Header } from './Components/Header.tsx';
-import ProcessingSteps from './Components/ProcessingSteps.tsx';
-import { Features } from './Components/Features.tsx';
-import { Footer } from './Components/Footer.tsx';
-import { Hero } from './Components/Hero.tsx';
+import { Header } from './HomePageComponents/Header.tsx';
+import ProcessingSteps from './HomePageComponents/ProcessingSteps.tsx';
+import { Features } from './HomePageComponents/Features.tsx';
+import { Footer } from './HomePageComponents/Footer.tsx';
+import { Hero } from './HomePageComponents/Hero.tsx';
 
 const Home: React.FC = () => {
 
