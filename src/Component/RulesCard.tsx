@@ -29,17 +29,17 @@ const RulesCard: React.FC = () => {
     };
 
     return (
-        <div
-            className="lg:w-full lg:h-full flex justify-center items-center rounded-lg p-4 overflow-hidden flex-col bg-bgsecondary">
-            <h2 className="text-xl text-text p-4">Selected Rules</h2>
-            <div className="w-full max-h-64 overflow-y-auto">
-                <table className="table-auto w-full">
+        <div className="relative w-full h-full rounded-lg p-4 bg-bgsecondary flex items-center justify-center">
+            {/* Table centrée verticalement */}
+            <div className="w-full max-h-84 overflow-y-auto flex justify-center">
+                <table className="table-auto w-1/2">
                     <tbody>
                     {data.map((item) => (
-                        <tr key={item.id} className="border-b border-gray-300 text-text">
-                            <td className="px-4 py-2 text-center ">
+                        <tr key={item.id} className="border-b border-gray-300 text-text flex justify-center">
+                            <td className="px-4 py-2 text-center">
                                 <input
                                     type="checkbox"
+                                    className="scale-100"
                                     checked={selectedItems.includes(item.id)}
                                     onChange={() => handleCheckboxChange(item.id)}
                                 />
@@ -50,7 +50,11 @@ const RulesCard: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+            <h2 className="absolute bottom-4 left-4 text-xl text-text">Selected Rules</h2>
         </div>
     );
+
+
+
 };
 export default RulesCard;
