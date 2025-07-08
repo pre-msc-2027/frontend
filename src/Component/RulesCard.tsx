@@ -29,7 +29,7 @@ const RulesCard: React.FC = () => {
     };
 
     return (
-        <div className="relative w-full h-full rounded-lg p-4 bg-bg border border-border flex flex-col items-center justify-center">
+        <div className=" w-full h-full rounded-lg p-4 bg-bg border border-border flex flex-col items-center ">
             {/* Table centrée verticalement */}
             <div className="w-full h-full overflow-y-auto flex justify-center">
                 <table className="table-auto w-1/2">
