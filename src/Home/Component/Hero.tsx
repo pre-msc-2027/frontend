@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, type Variants  } from 'framer-motion';
 import { CodeBackground } from './CodeBackground.tsx';
 import { AnimatedText } from './AnimatedText.tsx';
-import { loginWithGitHub } from '../Api/service/authServices.ts';
+import { loginWithGitHub } from '../../Api/service/authServices.ts';
 
 const containerVariants: Variants = {
   hidden: {},

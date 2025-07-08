@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import {AnimatePresence, easeInOut, motion} from 'framer-motion';
-import Home from './HomePage.tsx';
+import Home from './Home/HomePage.tsx' ;
 import Dashboard from './Dashboard';
 import PrivateRoute from './Component/PrivateRoute.tsx';
 

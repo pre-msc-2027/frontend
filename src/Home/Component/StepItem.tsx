@@ -2,7 +2,6 @@
 import React from 'react';
 import StepIcon from './StepIcon.tsx';
 import StepContent from './StepContent.tsx';
-import StepConnector from './StepConnector.tsx';
 
 interface Step {
   title: string;
@@ -24,7 +23,6 @@ const StepItem: React.FC<StepItemProps> = ({ step, index, isVisible }) => (
     }`}
     style={{ transitionDelay: `${index * 200}ms` }}
   >
-    {/* <StepConnector show={index < 3 } /> */}
     <StepIcon icon={step.icon} color={step.color} />
     <StepContent title={step.title} description={step.description} />
   </div>
