@@ -3,18 +3,18 @@ import React from 'react';
 const LogsDashboard: React.FC = () => {
     return (
         <div
-            className="w-full h-full flex flex-col justify-center items-center rounded-lg bg-bgsecondary p-4 overflow-hidden">
+            className="w-full h-full flex flex-col justify-center items-center p-4 overflow-hidden">
             <div className="w-full h-1/6 flex flex-col lg:flex-col lg:items-center">
                 {/*Search Bar*/}
                 <div className="w-full flex justify-center mb-4 lg:mb-2">
                     <input
                         type="text"
                         placeholder="Search logs..."
-                        className="p-2 rounded-lg text-textg focus:outline-none w-full bg-bg"
+                        className="p-2 rounded-lg text-textg focus:outline-none w-full bg-border text-text"
                     />
                 </div>
                 {/*Tags*/}
-                <div className="w-full flex flex-row gap-2 justify-evenly lg:justify-center m-2 bg-bgsecondary">
+                <div className="w-full flex flex-row gap-2 justify-evenly lg:justify-center m-2 ">
                     <div className="gap-2 flex items-center">
                         <input type="checkbox" id="debug" name="debug"/>
                         <label htmlFor="debug">Debug</label>
@@ -34,7 +34,7 @@ const LogsDashboard: React.FC = () => {
                 </div>
             </div>
             {/*Logs Table*/}
-            <div className="w-full uppercase bg-bgsecondary flex">
+            <div className="w-full uppercase bg-bg² flex">
                 <div className="px-6 py-3 flex-1">Timestamp</div>
                 <div className="px-6 py-3 flex-1">Level</div>
                 <div className="px-6 py-3 flex-1">Message</div>
