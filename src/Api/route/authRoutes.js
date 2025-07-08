@@ -35,10 +35,10 @@ router.get('/callback', async (req, res) => {
       if (tokenData.error) {
         return res.status(400).send(`Erreur lors de l'obtention du token: ${tokenData.error_description}`);
       }
-  
+
       const accessToken = tokenData.access_token;
       req.session.accessToken = accessToken;
-      res.redirect('http://localhost:5173/'); // Redirection vers ton front
+      res.redirect('http://localhost:5173/SelectBranch');
     } catch (error) {
       res.status(500).send(`Erreur serveur: ${error.message}`);
     }
