@@ -3,9 +3,6 @@ import {AnimatePresence, easeInOut, motion} from 'framer-motion';
 import Home from './Home/HomePage.tsx' ;
 import Dashboard from './Dashboard';
 import PrivateRoute from './Component/PrivateRoute.tsx';
-import Navbar from "./Component/NavBar.tsx";
-import RepoBranchSelector from "./Component/SelectBar.tsx";
-import SelectBranch from "./Repo/SelectBranch.tsx"
 
 
 function App() {
