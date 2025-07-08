@@ -8,6 +8,7 @@ import LogsDashboard from "./Component/LogsDashboard.tsx";
 const Dashboard: React.FC = () => {
     return (
 
+
         <div className="h-screen flex flex-col">
             {/* Header */}
             <div className="h-1/8 flex flex-row justify-between m-4">
@@ -50,9 +51,11 @@ const Dashboard: React.FC = () => {
                             <RulesCard/>
                         </div>
                     </div>
+
                     {/* Right Side */}
                     <div className="w-full lg:w-2/5 bg-bg rounded-lg border border-border h-full">
                         {/* Content for the right side */}
+
                         <LogsDashboard/>
                     </div>
                 </div>

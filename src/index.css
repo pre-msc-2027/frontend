@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 /*Dark theme*/
@@ -80,7 +79,7 @@ html, body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 5.8em;
   line-height: 1.1;
 }
 

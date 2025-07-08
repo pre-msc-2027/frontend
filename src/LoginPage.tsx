@@ -1,6 +1,4 @@
 import React from 'react';
-import Blob from './Component/Blob.tsx';
-import Launcher from './Component/Launcher.tsx';
 import './LoginPage.css';
 import { loginWithGitHub } from "./Api/service/authServices.ts";
 
@@ -9,11 +7,9 @@ const LoginPage: React.FC = () => {
         loginWithGitHub();
     }
     return (
-        <Blob>
             <div className="blob-content">
                 <div className="grid-container">
                     <div className="grid-item">
-                        <Launcher  />
                     </div>
                     <div className="grid-item">
                         <h1>Welcome to <br/><span>SecuScan</span></h1>
@@ -25,7 +21,6 @@ const LoginPage: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </Blob>
     );
 };
 
