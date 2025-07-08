@@ -10,6 +10,7 @@
   --color-text: oklch(1 0 89.876);
   --color-icon: oklch(0.5192 0.182 256.69);
   --color-text-title: oklch(0.805 0 89.876) ;
+  --color-border: oklch(1 0 0);
 }
 /* Light theme*/
 @layer base {
@@ -21,6 +22,7 @@
     --color-text: oklch(0.667 0 89.876);
     --color-icon: oklch(0.5192 0.182 256.69);
     --color-text-title: oklch(0.805 0 89.876) ;
+    --color-border: oklch(0.8853 0 0);
 
   }
 }
