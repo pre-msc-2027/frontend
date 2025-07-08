@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Code2, Menu, X, Github } from 'lucide-react';
+import Navbar from "../Component/NavBar.tsx";
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,29 +30,7 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div
-            className={`hidden md:flex items-center gap-1 bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-full px-6 py-4 shadow-lg transition-all duration-700 ease-out
-              ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-          >
-            {['Home', 'Dashboard', 'Profile'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="px-4 py-2 text-gray-600 hover:text-black hover:bg-gray-100/60 rounded-full transition-all duration-200 text-2xl font-medium"
-              >
-                {item}
-              </a>
-            ))}
-            <div className="w-px h-6 bg-gray-300 mx-2"></div>
-            <a
-              href="https://github.com/ton-projet"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 transition-transform"
-            >
-              <Github className="w-6 h-6 text-red-800 hover:text-black" />
-            </a>
-          </div>
+          <Navbar/>
 
           {/* Mobile Toggle */}
           <button

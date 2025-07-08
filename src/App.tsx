@@ -2,9 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import {AnimatePresence, easeInOut, motion} from 'framer-motion';
 import Home from './HomePage.tsx';
 import Dashboard from './Dashboard';
-import Profile from './ProfilePage.tsx';
 import PrivateRoute from './Component/PrivateRoute.tsx';
-import LoginPage from './LoginPage.tsx';
 
 
 function App() {
@@ -55,34 +53,8 @@ function App() {
                             </motion.div>
                         }
                     />
-                    <Route
-                        path="/profile"
-                        element={
-                            <motion.div
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <PrivateRoute><Profile /></PrivateRoute>
-                            </motion.div>
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            <motion.div
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <LoginPage />
-                            </motion.div>
-                        }
-                    />
+
+
                 </Routes>
             </AnimatePresence>
         </div>
