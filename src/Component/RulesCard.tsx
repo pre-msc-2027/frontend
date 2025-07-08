@@ -29,9 +29,9 @@ const RulesCard: React.FC = () => {
     };
 
     return (
-        <div className="relative w-full h-full rounded-lg p-4 bg-bgsecondary flex items-center justify-center">
+        <div className="relative w-full h-full rounded-lg p-4 bg-bg border border-border flex flex-col items-center justify-center">
             {/* Table centrée verticalement */}
-            <div className="w-full max-h-84 overflow-y-auto flex justify-center">
+            <div className="w-full h-full overflow-y-auto flex justify-center">
                 <table className="table-auto w-1/2">
                     <tbody>
                     {data.map((item) => (
@@ -50,10 +50,11 @@ const RulesCard: React.FC = () => {
                     </tbody>
                 </table>
             </div>
-            <h2 className="absolute bottom-4 left-4 text-xl text-text">Selected Rules</h2>
+            <div className="flex justify-start w-full">
+                <h2 className="text-xl text-text">Selected Rules</h2>
+            </div>
         </div>
     );
-
 
 
 };
