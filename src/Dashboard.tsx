@@ -2,6 +2,8 @@ import "./Dashboard.css";
 import React from "react";
 import PieChart from "./Component/PieChart.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
+import RepoBranchDropdown from "./Component/SelectBar.tsx";
+import Navbar from "./Component/NavBar.tsx";
 import LogsDashboard from "./Component/LogsDashboard.tsx";
 
 
@@ -12,15 +14,9 @@ const Dashboard: React.FC = () => {
         <div className="h-screen flex flex-col">
             {/* Header */}
             <div className="h-1/8 flex flex-row justify-between m-4">
-                {/* Search Bar */}
-                <div className="w-3/5 bg-primary">
-
-                </div>
+                <RepoBranchDropdown/>
                 {/* NavBar */}
-                <div className="w-2/5 bg-secondary">
-
-                </div>
-
+                <Navbar/>
 
             </div>
 
