@@ -9,13 +9,13 @@ import { Hero } from './HomePageComponents/Hero.tsx';
 const Home: React.FC = () => {
 
     return (
-        <>
+        <div className="bg-gradient-to-b from-bg to-bg min-h-screen">
             <Header/>
             <Hero/>
             <ProcessingSteps/>
             <Features/>
             <Footer/>
-        </>
+        </div>
     );
 };
 

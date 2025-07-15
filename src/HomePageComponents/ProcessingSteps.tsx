@@ -41,30 +41,30 @@ export const ProcessingSteps: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-sky-85 via-indigo-40 to-gray-100 py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-gray-900 mb-4">
-            Step-by-Step Process
-          </h2>
-          <p className="text-3xl text-black-600 max-w-3xl mx-auto">
-            Follow our streamlined process to analyze your code for security vulnerabilities
-          </p>
-        </div>
+      <div className="relative py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                  <h2 className="text-5xl font-bold text-text mb-4">
+                      Step-by-Step Process
+                  </h2>
+                  <p className="text-3xl text-text max-w-3xl mx-auto">
+                      Follow our streamlined process to analyze your code for security vulnerabilities
+                  </p>
+              </div>
 
-        <div className="relative flex flex-row justify-center items-start gap-12 max-w-6xl mx-auto px-4">
-        {steps.map((step, index) => (
-          <StepItem
-            key={index}
-            step={step}
-            index={index}
-            isVisible={index < visibleSteps}
-          />
-        ))}
-        </div>
+              <div className="relative flex flex-row justify-center items-start gap-12 max-w-6xl mx-auto px-4 text-text">
+                  {steps.map((step, index) => (
+                      <StepItem
+                          key={index}
+                          step={step}
+                          index={index}
+                          isVisible={index < visibleSteps}
+                      />
+                  ))}
+              </div>
 
+          </div>
       </div>
-    </div>
   );
 };
 

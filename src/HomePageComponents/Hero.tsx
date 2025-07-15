@@ -46,20 +46,18 @@ export const Hero: React.FC = () => {
   // @ts-ignore
   return (
     <motion.div
-      className="relative bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50 overflow-hidden min-h-screen flex items-center"
+      className="relative overflow-hidden min-h-screen flex items-center"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       <CodeBackground />
 
-      {/* Background patterns */}
-      <div className="absolute inset-0 " />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/30" />
+
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <motion.h1
-          className="text-7xl sm:text-8xl lg:text-9xl font-bold text-gray-900 mb-8 tracking-tight leading-none"
+            className="text-7xl sm:text-8xl lg:text-9xl font-bold text-text mb-8 tracking-tight leading-none"
           variants={itemVariants}
         >
           Uncover your repository
@@ -71,7 +69,7 @@ export const Hero: React.FC = () => {
         </motion.h1>
 
         <motion.p
-          className="text-3xl text-gray-700 mb-16 max-w-3xl mx-auto leading-relaxed font-medium"
+          className="text-3xl text-text mb-16 max-w-3xl mx-auto leading-relaxed font-medium"
           variants={itemVariants}
         >
           A powerful tool that analyzes GitHub repositories to extract key insights, trends, and metrics.
