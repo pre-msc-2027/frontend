@@ -117,3 +117,62 @@
 .branch-submenu:hover {
     display: block;
 }
+
+.add-repo-button {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    border: 1px solid var(--color-text);
+    background: var(--color-secondary);
+    color: var(--color-bg);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-family: sans-serif;
+}
+
+.add-repo-button:hover {
+    background: var(--color-text);
+    color: var(--color-bgsecondary);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #222;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.repo-choice {
+    padding: 0.5rem;
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.repo-choice:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

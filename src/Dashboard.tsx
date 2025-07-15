@@ -5,6 +5,7 @@ import RulesCard from "./Component/RulesCard.tsx";
 import RepoBranchDropdown from "./Component/SelectBar.tsx";
 import Navbar from "./Component/NavBar.tsx";
 import LogsDashboard from "./Component/LogsDashboard.tsx";
+import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 
 const Dashboard: React.FC = () => {
     return (
@@ -51,6 +52,8 @@ const Dashboard: React.FC = () => {
                         <div className="flex-[3] bg-bg border border-border rounded-lg p-4">
                             <p className="text-xl text-text">Progression bar
                             </p>
+                            <DevelopmentProgress currentStage={3} />
+
                         </div>
                     </div>
 
