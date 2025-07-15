@@ -43,13 +43,13 @@ const features = [
 
 export const Features: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-sky-85 via-indigo-40 to-gray-100 py-10">
+    <div className="py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-5xl font-bold text-text mb-4">
             Why Choose SecuScan?
           </h2>
-          <p className="text-3xl text-black-600 max-w-4xl mx-auto">
+          <p className="text-3xl text-text max-w-4xl mx-auto">
             We help you audit and secure your repositories with ease, spot vulnerabilities, ensure compliance, and collaborate with confidence.
           </p>
         </div>
@@ -69,10 +69,10 @@ export const Features: React.FC = () => {
                 className="text-center group"
               >
                 <div className={`bg-gradient-to-r ${feature.color} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className="w-8 h-8 text-white" />
+                  <Icon className="w-8 h-8 text-text" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-black-600 text-2xl">{feature.description}</p>
+                <h3 className="text-3xl font-bold text-text-title mb-2">{feature.title}</h3>
+                <p className="text-text text-2xl">{feature.description}</p>
               </motion.div>
             );
           })}

@@ -120,7 +120,7 @@ export const CodeBackground: React.FC = () => {
         {codeSnippets.map((snippet, index) => (
           <div
             key={index}
-            className={`absolute font-mono font-semibold text-gray-400 opacity-60 hover:opacity-80 transition-opacity ${snippet.size} ${snippet.direction}`}
+            className={`absolute font-mono font-semibold text-text opacity-60 hover:opacity-80 transition-opacity ${snippet.size} ${snippet.direction}`}
             style={{
               left: snippet.x,
               top: snippet.y,

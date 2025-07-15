@@ -23,8 +23,8 @@ export const Header: React.FC = () => {
             className={`flex items-center space-x-2 transition-all duration-700 ease-out
               ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'}`}
           >
-            <Code2 className="text-gray-900 w-7 h-7" />
-            <span className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight">
+            <Code2 className="text-text w-7 h-7"/>
+            <span className="text-3xl sm:text-4xl font-semibold text-text tracking-tight">
               SecuScan
             </span>
           </div>

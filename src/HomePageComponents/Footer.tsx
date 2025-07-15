@@ -3,10 +3,10 @@ import { Facebook, Twitter, Github, Linkedin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-10">
+    <footer className="text-text py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-700 pb-8">
-          <h3 className="text-2xl font-bold text-white mb-4 md:mb-0">
+          <h3 className="text-2xl font-bold text-text mb-4 md:mb-0">
             SecuScan
           </h3>
           <div className="flex space-x-6">
