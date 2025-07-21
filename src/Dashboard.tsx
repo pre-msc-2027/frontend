@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
                     {/* Left Side */}
                     <div className="w-full lg:w-3/5 flex flex-col gap-4 h-full overflow-hidden">
                         {/* Top area */}
-                        <div className="flex flex-col md:flex-row gap-4 flex-[5] min-h-0">
+                        <div className="flex flex-col md:flex-row gap-4 h-5/7">
                             {/* Left half */}
                             <div className="flex flex-col w-full md:w-2/4 gap-4">
                                 <div className="flex-1 bg-bg border border-border rounded-lg p-4">
@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
                         </div>
 
                         {/* Bottom area */}
-                        <div className="flex-[3] bg-bg border border-border rounded-lg p-4 overflow-hidden">
+                        <div className="flex-[3] bg-bg border border-border rounded-lg p-4 overflow-hidden h-2/7">
                             <p className="text-xl text-text">Progression bar</p>
                             <DevelopmentProgress currentStage={3} />
                         </div>
