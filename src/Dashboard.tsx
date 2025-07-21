@@ -9,7 +9,7 @@ import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 
 const Dashboard: React.FC = () => {
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
+        <div className="lg:h-screen flex flex-col overflow-hidden">
             {/* Header */}
             <div className="basis-[10%] flex-none flex flex-row justify-between m-2">
                 <RepoBranchDropdown />
@@ -39,8 +39,8 @@ const Dashboard: React.FC = () => {
                             </div>
 
                             {/* Right half */}
-                            <div className="w-2/4 overflow-hidden">
-                                <RulesCard />
+                            <div className="md:w-2/4 lg:h-full">
+                                    <RulesCard />
                             </div>
                         </div>
 
