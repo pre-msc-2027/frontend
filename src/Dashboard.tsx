@@ -9,33 +9,27 @@ import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 
 const Dashboard: React.FC = () => {
     return (
-        <div className="h-screen flex flex-col">
+        <div className="h-screen flex flex-col overflow-hidden">
             {/* Header */}
-            <div className="flex-none py-4 flex flex-row justify-between mx-4">
+            <div className="basis-[10%] flex-none flex flex-row justify-between m-2">
                 <RepoBranchDropdown />
                 <Navbar />
             </div>
 
-            {/* White Bar */}
-            <div className="h-1 w-3/5 bg-secondary self-center"></div>
-
             {/* Main Content */}
-            <div className="flex-grow m-4">
-                <div className="flex flex-col lg:flex-row h-full gap-4">
+            <div className="basis-[90%] flex-grow overflow-hidden m-4">
+                <div className="flex flex-col lg:flex-row gap-4 h-full">
                     {/* Left Side */}
-                    <div className="w-full lg:w-3/5 flex flex-col h-full gap-4">
-                        {/* Top 5/8 area */}
-                        <div className="flex flex-col md:flex-row flex-[5] gap-4">
-                            {/* Left part: Action Card + Pie chart */}
+                    <div className="w-full lg:w-3/5 flex flex-col gap-4 h-full overflow-hidden">
+                        {/* Top area */}
+                        <div className="flex flex-col md:flex-row gap-4 flex-[5] min-h-0">
+                            {/* Left half */}
                             <div className="flex flex-col w-full md:w-2/4 gap-4">
-                                {/* Top Action Card */}
                                 <div className="flex-1 bg-bg border border-border rounded-lg p-4">
                                     <p className="text-xl text-text">Action Card</p>
                                 </div>
-
-                                {/* Pie Chart */}
-                                <div className="flex-[2] flex flex-col items-center p-4 bg-bg rounded-lg border border-border">
-                                    <div className="flex-1 w-full">
+                                <div className="flex-[2] flex flex-col items-center p-4 bg-bg rounded-lg border border-border overflow-hidden">
+                                    <div className="flex-1 w-full overflow-hidden">
                                         <PieChart />
                                     </div>
                                     <div className="pt-2 w-full">
@@ -44,22 +38,21 @@ const Dashboard: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Rules Card */}
-                            <RulesCard />
+                            {/* Right half */}
+                            <div className="w-2/4 overflow-hidden">
+                                <RulesCard />
+                            </div>
                         </div>
 
-                        {/* Bottom 3/8 area */}
-                        <div className="flex-[3] bg-bg border border-border rounded-lg p-4">
-                            <p className="text-xl text-text">Progression bar
-                            </p>
+                        {/* Bottom area */}
+                        <div className="flex-[3] bg-bg border border-border rounded-lg p-4 overflow-hidden">
+                            <p className="text-xl text-text">Progression bar</p>
                             <DevelopmentProgress currentStage={3} />
-
                         </div>
                     </div>
 
-
                     {/* Right Side */}
-                    <div className="w-full lg:w-2/5 bg-bg rounded-lg border border-border flex flex-col p-4">
+                    <div className="w-full lg:w-2/5 bg-bg rounded-lg border border-border flex flex-col p-4 overflow-hidden">
                         <LogsDashboard />
                     </div>
                 </div>
@@ -67,5 +60,6 @@ const Dashboard: React.FC = () => {
         </div>
     );
 };
+
 
 export default Dashboard;
