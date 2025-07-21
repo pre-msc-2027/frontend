@@ -140,10 +140,10 @@ button:focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888;
+  background-color: rgb(136, 136, 136);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: rgba(241, 241, 241, 0);
+  background-color: rgba(255, 255, 255, 0);
 }
