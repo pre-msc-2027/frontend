@@ -175,19 +175,19 @@ class ApiService {
         return this.token;
     }
 
-    // Generic request method
     private async request<T>(
         url: string,
         options: RequestInit = {}
     ): Promise<ApiResponse<T>> {
         try {
-            const headers: HeadersInit = {
+            // Crée une instance Headers pour pouvoir utiliser .set()
+            const headers = new Headers({
                 'Content-Type': 'application/json',
                 ...options.headers,
-            };
+            });
 
             if (this.token) {
-                headers['Authorization'] = `Bearer ${this.token}`;
+                headers.set('Authorization', `Bearer ${this.token}`);
             }
 
             const controller = new AbortController();
@@ -221,6 +221,7 @@ class ApiService {
             };
         }
     }
+
 
     // SCANS endpoints
     async getScansSummary(user: string): Promise<ApiResponse<RepoSummary[]>> {
@@ -387,7 +388,6 @@ class ApiService {
         userId: string,
         repoUrl: string,
         branchId: string,
-        selectedRules: string[],
         useAI: boolean = false
     ): Promise<ApiResponse<ScanOut>> {
         const scanRequest: CreateScanRequest = {

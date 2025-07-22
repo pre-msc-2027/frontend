@@ -2,7 +2,6 @@
 import React from 'react';
 import StepIcon from './StepIcon.tsx';
 import StepContent from './StepContent.tsx';
-import StepConnector from './StepConnector.tsx';
 
 interface Step {
   title: string;
