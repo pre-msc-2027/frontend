@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./SelectBar.css";
 
-// Type definitions
 interface RepoData {
     repo: string;
     repo_url: string;
@@ -193,6 +192,7 @@ export default function RepoBranchDropdown() {
         if (!addedRepos.find((r) => r.repo === newRepo.repo)) {
             setAddedRepos([...addedRepos, newRepo]);
             console.log(`Added repository: ${userRepo.name}`);
+
         }
         setShowModal(false);
     };
@@ -347,6 +347,7 @@ export default function RepoBranchDropdown() {
                         <div className="modal-actions">
                             <button className="cancel-button" onClick={handleModalClose}>
                                 Cancel
+
                             </button>
                         </div>
                     </div>

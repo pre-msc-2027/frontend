@@ -1,4 +1,3 @@
-import React from "react";
 import {
     FaBolt,
     FaSearch,
@@ -76,6 +75,7 @@ export default function DevelopmentProgress({ currentStage }: DevelopmentProgres
         if (currentStage === stageId) return 'active';
         return 'pending';
     };
+
 
     return (
         <div className="progress-wrapper">
