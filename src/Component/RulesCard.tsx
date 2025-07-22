@@ -151,7 +151,7 @@ const RulesCard: React.FC = () => {
                     </div>
                 ) : (
                     filteredRules.map((rule, index) => (
-                        <div
+                        <button
                             key={rule.id}
                             className={`rule-item ${selectedRules.includes(rule.id) ? 'selected' : ''} ${!rule.enabled ? 'disabled' : ''}`}
                             onClick={() => handleRuleToggle(rule.id)}
@@ -177,7 +177,7 @@ const RulesCard: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </button>
                     ))
                 )}
             </div>

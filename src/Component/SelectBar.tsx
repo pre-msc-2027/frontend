@@ -252,6 +252,14 @@ export default function RepoBranchDropdown() {
                                                     <div
                                                         className={`branch-name ${isExpanded ? 'expanded' : ''}`}
                                                         onClick={() => handleBranchClick(repo, branch)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                                e.preventDefault();
+                                                                handleBranchClick(repo, branch);
+                                                            }
+                                                        }}
+                                                        tabIndex={0}
+                                                        role="button"
                                                     >
                                                         {branch}
                                                         <span className="branch-info">
@@ -276,8 +284,17 @@ export default function RepoBranchDropdown() {
                                                                 <div
                                                                     className="analysis-item create-new"
                                                                     onClick={() => handleBranchSelect(repo, branch)}
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                                            e.preventDefault();
+                                                                            handleBranchSelect(repo, branch);
+                                                                        }
+                                                                    }}
+                                                                    tabIndex={0}
+                                                                    role="button"
+                                                                    aria-label="Create new analysis"
                                                                 >
-                                                                     Create new analysis
+                                                                    Create new analysis
                                                                 </div>
                                                             ) : (
                                                                 analyses.map((analysis) => (
@@ -285,11 +302,20 @@ export default function RepoBranchDropdown() {
                                                                         key={analysis.scan_id}
                                                                         className="analysis-item"
                                                                         onClick={() => handleAnalysisSelect(analysis.scan_id)}
+                                                                        onKeyDown={(e) => {
+                                                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                                                e.preventDefault();
+                                                                                handleAnalysisSelect(analysis.scan_id);
+                                                                            }
+                                                                        }}
+                                                                        tabIndex={0}
+                                                                        role="button"
                                                                         title={`Click to view analysis: ${analysis.scan_id}`}
+                                                                        aria-label={`View analysis: ${analysis.project_name}`}
                                                                     >
-                                                                        {analysis.project_name}
+                                                                         {analysis.project_name}
                                                                         <span className="analysis-date">
-                                                                            ({formatScanDate(analysis.scan_id)})
+                                                                          ({formatScanDate(analysis.scan_id)})
                                                                         </span>
                                                                     </div>
                                                                 ))
