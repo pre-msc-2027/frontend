@@ -1,65 +1,28 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import {AnimatePresence, easeInOut, motion} from 'framer-motion';
-import Home from './HomePage.tsx';
+// App.tsx - Remove Router wrapper
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Dashboard from './Dashboard';
-import PrivateRoute from './Component/PrivateRoute.tsx';
+import Home from './HomePage';
+import { useTheme } from './useTheme';
+import './ThemeSystem.css';
 
+const App: React.FC = () => {
+    const { theme } = useTheme();
 
-function App() {
-    const location = useLocation();
-
-    // Animation variants for page transitions
-    const pageVariants = {
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -20 }
-    };
-
-    const pageTransition = {
-        duration: 0.4,
-        ease: easeInOut,
-    };
+    React.useEffect(() => {
+        document.body.className = `theme-${theme}`;
+        document.documentElement.setAttribute('data-theme', theme);
+        document.body.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    }, [theme]);
 
     return (
-        <>
-        <div className="bg-bg w-screen h-screen">
-            <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                    <Route
-                        path="/"
-                        element={
-                            <motion.div
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <Home />
-                            </motion.div>
-                        }
-                    />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <motion.div
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={pageVariants}
-                                transition={pageTransition}
-                            >
-                                <PrivateRoute><Dashboard /></PrivateRoute>
-                            </motion.div>
-                        }
-                    />
-
-
-                </Routes>
-            </AnimatePresence>
+        <div className={`app-wrapper theme-${theme}`}>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
         </div>
-        </>
     );
-}
+};
 
 export default App;

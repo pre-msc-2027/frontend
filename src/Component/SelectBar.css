@@ -1,15 +1,12 @@
 .dropdown-container {
     position: relative;
     justify-content: center;
-
     width: 80%;
     font-family: sans-serif;
     height: 50px;
-
-
 }
 
-/* Search bar styling */
+/* Search bar styling with enhanced glassmorphism */
 .search-bar {
     color: var(--color-text);
     width: 80%;
@@ -18,15 +15,44 @@
     align-items: center;
     padding: 0.5rem;
     margin: 0.5rem;
-    --blur: 0.2;
-    background: 	var(--color-bgsecondary);
-    border: 1px solid 	var(--color-text);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 45px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow:  8px 10px 0 var(--color-bgsecondary);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            0 1px 0 rgba(255, 255, 255, 0.1);
     z-index: 1000;
-    animation: pulseShadow 3s ease-in-out infinite;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.search-bar:hover::before {
+    left: 100%;
+}
+
+.search-bar:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .search-area {
@@ -35,105 +61,406 @@
 
 .dropdown-menu {
     color: var(--color-text);
-
     display: none;
     position: absolute;
     top: 60px;
-    left: 20px ;
+    left: 20px;
     width: 75%;
-    background: var(--color-bg);
-    border: 1px solid var(--color-text);
-    border-radius:20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
     z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+            0 16px 64px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
 
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 /* Show dropdown when .search-area is hovered */
 .search-area:hover .dropdown-menu {
     display: block;
-    color: var(--color-text);
-
-    box-shadow:  8px 10px 0 var(--color-bg);
-    animation: pulseShadow 3s ease-in-out infinite;
-
+    animation: dropdownFadeIn 0.3s ease-out;
 }
 
-/* Repo item styling */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Repo item styling with glassmorphism */
 .repo-item {
     position: relative;
     color: var(--color-text);
+    margin: 4px;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
 
+.repo-item:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .repo-name {
     color: var(--color-text);
-
     margin: 6px;
-    padding: 8px;
-    padding-left: 12px;
+    padding: 12px 16px;
     cursor: pointer;
-    border-radius: 20px;
-    background: var(--color-bg);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.repo-name.expanded {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.repo-name::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .repo-name:hover {
-    background: var(--color-secondary);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+    box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.repo-name:hover::before {
+    opacity: 1;
+}
+
+.repo-icon {
+    margin-right: 8px;
+}
+
+.expand-icon {
+    font-size: 0.8em;
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.repo-name.expanded .expand-icon {
+    transform: rotate(90deg);
+}
+
+/* Branch list styling */
+.branch-list {
+    margin-left: 24px;
+    margin-top: 8px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    padding-left: 16px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+.branch-group {
+    margin: 4px 0;
+}
+
+.branch-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    margin: 4px 0;
+}
+
+.branch-name.expanded {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.branch-name:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+    box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.branch-icon {
+    margin-right: 8px;
+}
+
+.branch-info {
+    flex-grow: 1;
+    margin-left: 8px;
+}
+
+.no-analysis {
+    font-size: 0.85em;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.single-analysis {
+    font-size: 0.85em;
+    opacity: 0.8;
+    color: #60a5fa;
+}
+
+.multiple-analyses {
+    font-size: 0.85em;
+    opacity: 0.8;
+    color: #34d399;
+}
+
+/* Analysis list styling */
+.analysis-list {
+    margin-left: 24px;
+    margin-top: 8px;
+    border-left: 2px solid rgba(255, 255, 255, 0.08);
+    padding-left: 16px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.analysis-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    margin: 2px 0;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.analysis-item.create-new {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.analysis-item.create-new:hover {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.analysis-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+    box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.analysis-date {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-left: 8px;
 }
 
 .branch-submenu {
     display: none;
     position: absolute;
-
     top: 0;
-
     left: 100%;
-    background: var(--color-bg);
-    border: 1px solid var(--color-text);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
     color: var(--color-text);
-
-
-    min-width: 150px;
+    min-width: 200px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+            0 20px 80px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin-left: 8px;
+    overflow: hidden;
 }
 
-.repo-item:hover .branch-submenu {
-    display: block;
+.branch-submenu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
-.branch-item {
-    padding: 8px;
-    cursor: pointer;
-    color: var(--color-text);
-
-}
-
-.branch-item:hover {
-    background: var(--color-bg);
-    border-radius: 40px;
-}
-/* Show submenu when either the parent or the submenu is hovered */
 .repo-item:hover .branch-submenu,
 .branch-submenu:hover {
     display: block;
+    animation: submenuSlideIn 0.3s ease-out;
+}
+
+@keyframes submenuSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.branch-group {
+    margin: 4px;
+}
+
+.branch-header {
+    position: relative;
+}
+
+.branch-name {
+    display: block;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.branch-name:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+    box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.no-analysis {
+    font-size: 0.85em;
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.analysis-submenu {
+    margin-left: 16px;
+    margin-top: 4px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    padding-left: 12px;
+}
+
+.analysis-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    margin: 2px 0;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.analysis-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+    box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.analysis-date {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-left: 8px;
 }
 
 .add-repo-button {
     margin-left: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
     border-radius: 25px;
-    border: 1px solid var(--color-text);
-    background: var(--color-secondary);
-    color: var(--color-bg);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
     font-family: sans-serif;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.add-repo-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.add-repo-button:hover::before {
+    left: 100%;
 }
 
 .add-repo-button:hover {
-    background: var(--color-text);
-    color: var(--color-bgsecondary);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .modal-overlay {
@@ -142,37 +469,204 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
 }
 
 .modal-content {
-    background: #222;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 2rem;
-    border-radius: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    color: var(--color-text);
+    box-shadow:
+            0 32px 128px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    max-width: 400px;
+    width: 90%;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal-content h2 {
     margin-top: 0;
     text-align: center;
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.repo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .repo-choice {
-    padding: 0.5rem;
-    background: #333;
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+}
+
+.repo-choice-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.repo-choice-name {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.repo-choice-description {
+    font-size: 0.85em;
+    opacity: 0.7;
+    line-height: 1.3;
+}
+
+.private-badge {
+    font-size: 0.8em;
+}
+
+.loading-container {
+    color: var(--color-text);
+    opacity: 0.8;
+}
+
+.repo-choice::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.repo-choice:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.repo-choice:hover::before {
+    opacity: 1;
 }
 
 .repo-choice:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.repo-choice:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.added-label {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.cancel-button {
+    padding: 0.5rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.cancel-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.error {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 4px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Subtle pulse animation for enhanced visual appeal */
+@keyframes subtlePulse {
+    0%, 100% {
+        box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+    }
 }

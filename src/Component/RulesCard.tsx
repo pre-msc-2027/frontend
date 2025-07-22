@@ -1,61 +1,188 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
+import { Search } from "lucide-react";
+import "./RulesCard.css";
 
-const data = [
-    { id: 1, name: "Item 1" },
-    { id: 2, name: "Item 2" },
-    { id: 3, name: "Item 3" },
-    { id: 4, name: "Item 4" },
-    { id: 5, name: "Item 1" },
-    { id: 6, name: "Item 2" },
-    { id: 7, name: "Item 3" },
-    { id: 8, name: "Item 4" },
-    { id: 9, name: "Item 1" },
-    { id: 10, name: "Item 2" },
-    { id: 11, name: "Item 3" },
-    { id: 12, name: "Item 4" },
-    { id: 13, name: "Item 1" },
-    { id: 14, name: "Item 2" },
-    { id: 15, name: "Item 3" },
-    { id: 16, name: "Item 4" },
+interface Rule {
+    id: number;
+    name: string;
+    description: string;
+    severity: 'critical' | 'high' | 'medium' | 'low';
+    enabled: boolean;
+}
+
+const mockRules: Rule[] = [
+    {
+        id: 1,
+        name: "SQL Injection Detection",
+        description: "Detects potential SQL injection vulnerabilities",
+        severity: 'critical',
+        enabled: true
+    },
+    {
+        id: 2,
+        name: "XSS Prevention",
+        description: "Prevents cross-site scripting attacks",
+        severity: 'high',
+        enabled: true
+    },
+    {
+        id: 3,
+        name: "Unused Variables",
+        description: "Identifies unused variables in code",
+        severity: 'medium',
+        enabled: false
+    },
+    {
+        id: 4,
+        name: "Performance Bottlenecks",
+        description: "Detects potential performance issues",
+        severity: 'high',
+        enabled: true
+    },
+    {
+        id: 5,
+        name: "CSRF Protection",
+        description: "Validates CSRF token implementation",
+        severity: 'high',
+        enabled: true
+    },
+    {
+        id: 6,
+        name: "Memory Leaks",
+        description: "Identifies potential memory leak patterns",
+        severity: 'medium',
+        enabled: false
+    },
+    {
+        id: 7,
+        name: "Accessibility Standards",
+        description: "Ensures WCAG compliance",
+        severity: 'medium',
+        enabled: true
+    },
+    {
+        id: 8,
+        name: "API Rate Limiting",
+        description: "Checks for proper rate limiting implementation",
+        severity: 'high',
+        enabled: false
+    },
+    {
+        id: 9,
+        name: "Code Complexity",
+        description: "Measures cyclomatic complexity",
+        severity: 'low',
+        enabled: true
+    },
+    {
+        id: 10,
+        name: "Insecure Dependencies",
+        description: "Scans for vulnerable dependencies",
+        severity: 'critical',
+        enabled: true
+    },
+    {
+        id: 11,
+        name: "Dead Code Elimination",
+        description: "Identifies unreachable code blocks",
+        severity: 'low',
+        enabled: false
+    },
+    {
+        id: 12,
+        name: "SEO Best Practices",
+        description: "Validates SEO optimization rules",
+        severity: 'medium',
+        enabled: true
+    },
 ];
 
 const RulesCard: React.FC = () => {
-    const [selectedItems, setSelectedItems] = React.useState<number[]>([]);
+    const [selectedRules, setSelectedRules] = useState<number[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const handleCheckboxChange = (id: number) => {
-        setSelectedItems((prev) =>
-            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    const filteredRules = useMemo(() => {
+        return mockRules.filter(rule => {
+            const matchesSearch = rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                rule.description.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesSearch;
+        });
+    }, [searchTerm]);
+
+    const handleRuleToggle = (id: number) => {
+        setSelectedRules(prev =>
+            prev.includes(id) ? prev.filter(ruleId => ruleId !== id) : [...prev, id]
         );
     };
 
+
+    const getSeverityColor = (severity: string) => {
+        const colors = {
+            critical: 'text-red-400',
+            high: 'text-orange-400',
+            medium: 'text-yellow-400',
+            low: 'text-blue-400'
+        };
+        return colors[severity as keyof typeof colors] || colors.low;
+    };
+
     return (
-        <div className=" w-full h-full rounded-lg p-4 bg-bg border border-border flex flex-col items-center ">
-            {/* Table centrée verticalement */}
-            <div className="w-full h-full overflow-y-auto flex justify-center">
-                <table className="table-auto w-1/2">
-                    <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id} className="border-b border-gray-300 text-text flex justify-center">
-                            <td className="px-4 py-2 text-center">
+        <div className="h-full flex flex-col">
+            {/* Search Bar */}
+            <div className="search-container">
+                <Search className="search-icon" size={16} />
+                <input
+                    type="text"
+                    placeholder="Search rules..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+            </div>
+
+            {/* Select All Button */}
+
+
+            {/* Rules List */}
+            <div className="rules-list">
+                {filteredRules.length === 0 ? (
+                    <div className="empty-state">
+                        <p>No rules found</p>
+                    </div>
+                ) : (
+                    filteredRules.map((rule, index) => (
+                        <div
+                            key={rule.id}
+                            className={`rule-item ${selectedRules.includes(rule.id) ? 'selected' : ''} ${!rule.enabled ? 'disabled' : ''}`}
+                            onClick={() => handleRuleToggle(rule.id)}
+                            style={{ '--animation-delay': `${index * 0.05}s` } as React.CSSProperties}
+                        >
+                            <div className="rule-checkbox">
                                 <input
                                     type="checkbox"
-                                    className="scale-100"
-                                    checked={selectedItems.includes(item.id)}
-                                    onChange={() => handleCheckboxChange(item.id)}
+                                    checked={selectedRules.includes(rule.id)}
+                                    onChange={() => handleRuleToggle(rule.id)}
+                                    className="checkbox-input"
                                 />
-                            </td>
-                            <td className="px-4 py-2 text-center">{item.name}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-            <div className="flex justify-start w-full">
-                <h2 className="text-xl text-text">Selected Rules</h2>
+                            </div>
+
+                            <div className="rule-info">
+                                <div className="rule-header">
+                                    <h4 className="rule-name">{rule.name}</h4>
+                                    <div className="rule-badges">
+                                        <span className={`severity-badge ${rule.severity} ${getSeverityColor(rule.severity)}`}>
+                                            {rule.severity}
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
-
-
 };
+
 export default RulesCard;

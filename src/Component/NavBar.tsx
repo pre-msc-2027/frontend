@@ -1,87 +1,79 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './NavBar.css';
 import { Home, LayoutDashboard, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../useTheme';
+import './NavBar.css';
 
-const Navbar = () => {
-    const [theme, setTheme] = React.useState<'light' | 'dark'>(
-        localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
-    );
-
-    React.useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+const Navbar: React.FC = () => {
+    const { theme, toggleTheme } = useTheme();
 
     return (
+        <nav className="glass-navbar">
+            {/* Navigation Links */}
+            <NavLink to="/" className="nav-link">
+                {({ isActive }) => (
+                    <motion.div
+                        className={`nav-item ${isActive ? 'active' : ''}`}
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    >
+                        <Home size={20} />
+                        <span className="nav-text">Home</span>
+                    </motion.div>
+                )}
+            </NavLink>
 
-            <nav className="glass-navbar">
-                {/* HOME */}
-                <NavLink to="/" className="nav-link">
-                    {({ isActive }) => (
+            <NavLink to="/dashboard" className="nav-link">
+                {({ isActive }) => (
+                    <motion.div
+                        className={`nav-item ${isActive ? 'active' : ''}`}
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    >
+                        <LayoutDashboard size={20} />
+                        <span className="nav-text">Dashboard</span>
+                    </motion.div>
+                )}
+            </NavLink>
+
+            {/* Enhanced Theme Toggle */}
+            <motion.button
+                className="theme-toggle theme-toggle-enhanced"
+                onClick={toggleTheme}
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+                <AnimatePresence mode="wait">
+                    {theme === 'dark' ? (
                         <motion.div
-                            className="nav-item"
-                            whileTap={{ scale: 0.95 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 300 }}
+                            key="sun"
+                            initial={{ rotate: -180, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: 180, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
                         >
-                            <Home size={24} />
-                            <AnimatePresence>
-                                {isActive && (
-                                    <motion.span
-                                        className="nav-text"
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 5 }}
-                                        exit={{ opacity: 0, x: -10 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        Home
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
+                            <Sun size={18} />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="moon"
+                            initial={{ rotate: 180, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: -180, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <Moon size={18} />
                         </motion.div>
                     )}
-                </NavLink>
-
-                <NavLink to="/dashboard" className="nav-link">
-                    {({ isActive }) => (
-                        <motion.div
-                            className="nav-item"
-                            whileTap={{ scale: 0.95 }}
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 300 }}
-                        >
-                            <LayoutDashboard size={24} />
-                            <AnimatePresence>
-                                {isActive && (
-                                    <motion.span
-                                        className="nav-text"
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 5 }}
-                                        exit={{ opacity: 0, x: -10 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        Dashboard
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
-                        </motion.div>
-                    )}
-                </NavLink>
-
-
-
-                <motion.button
-                    className="theme-toggle"
-                    onClick={toggleTheme}
-                >
-                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                </motion.button>
-            </nav>
-
+                </AnimatePresence>
+            </motion.button>
+        </nav>
     );
 };
 

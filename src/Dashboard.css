@@ -1,30 +1,334 @@
-.grid-container-dashboard {
-    display: grid;
-    grid-template-columns: 1fr 4fr 2fr;
-    gap: 10px;
-
+/* Dashboard Container */
+.dashboard-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg,
+    rgba(30, 30, 50, 0.9) 0%,
+    rgba(15, 15, 30, 0.95) 50%,
+    rgba(20, 20, 40, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.grid-item-dashboard {
-    border: 1px solid #333;
-    padding: 10px;
-    text-align: center;
+/* Header Section with Glassmorphism */
+.dashboard-header {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin: 1rem;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.grid-item-dashboard .left {
-    background-color: #ed2f6c;
-    align-items: stretch;
-    box-sizing: border-box;
-
-}
-.grid-item-dashboard .middle{
-    background-color: #0064ce;
-}
-.grid-item-dashboard right{
-    background-color: #747bff;
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
-top-grid {
-background-color: #ed2f6c;
-width: 100vh;
+/* Main Content Area */
+.dashboard-main {
+    margin: 1rem;
+    gap: 1rem;
 }
+
+/* Glass Card Base Styling */
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+            0 16px 64px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow:
+            0 20px 80px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Action Card */
+.action-card {
+    background: rgba(237, 47, 108, 0.1);
+    border: 1px solid rgba(237, 47, 108, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 12px 40px rgba(237, 47, 108, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(237, 47, 108, 0.4), transparent);
+}
+
+.action-card:hover {
+    background: rgba(237, 47, 108, 0.15);
+    border-color: rgba(237, 47, 108, 0.3);
+    box-shadow:
+            0 16px 60px rgba(237, 47, 108, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Pie Chart Card */
+.pie-chart-card {
+    background: rgba(0, 100, 206, 0.1);
+    border: 1px solid rgba(0, 100, 206, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 12px 40px rgba(0, 100, 206, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pie-chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 100, 206, 0.4), transparent);
+}
+
+.pie-chart-card:hover {
+    background: rgba(0, 100, 206, 0.15);
+    border-color: rgba(0, 100, 206, 0.3);
+    box-shadow:
+            0 16px 60px rgba(0, 100, 206, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Rules Card */
+.rules-card {
+    background: rgba(116, 123, 255, 0.1);
+    border: 1px solid rgba(116, 123, 255, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 12px 40px rgba(116, 123, 255, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.rules-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(116, 123, 255, 0.4), transparent);
+}
+
+.rules-card:hover {
+    background: rgba(116, 123, 255, 0.15);
+    border-color: rgba(116, 123, 255, 0.3);
+    box-shadow:
+            0 16px 60px rgba(116, 123, 255, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Progress Card */
+.progress-card {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 12px 40px rgba(34, 197, 94, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.progress-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.4), transparent);
+}
+
+.progress-card:hover {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow:
+            0 16px 60px rgba(34, 197, 94, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Logs Dashboard */
+.logs-card {
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow:
+            0 12px 40px rgba(168, 85, 247, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.logs-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.4), transparent);
+}
+
+.logs-card:hover {
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow:
+            0 16px 60px rgba(168, 85, 247, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Text Styling */
+.glass-title {
+    color: var(--color-text, rgba(255, 255, 255, 0.9));
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.glass-subtitle {
+    color: var(--color-text, rgba(255, 255, 255, 0.8));
+    font-weight: 500;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .dashboard-main {
+        margin: 3rem;
+        gap: 0.5rem;
+    }
+
+    .glass-card {
+        border-radius: 16px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        margin: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 16px;
+    }
+
+    .glass-card {
+        border-radius: 12px;
+        padding: 0.75rem;
+    }
+
+    .glass-title {
+        font-size: 1.125rem;
+    }
+}
+
+/* Animation for cards */
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-card {
+    animation: cardSlideIn 0.6s ease-out;
+}
+
+.glass-card:nth-child(1) { animation-delay: 0.1s; }
+.glass-card:nth-child(2) { animation-delay: 0.2s; }
+.glass-card:nth-child(3) { animation-delay: 0.3s; }
+.glass-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Floating animation for enhanced visual appeal */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-2px); }
+}
+
+.glass-card:hover {
+    animation: float 2s ease-in-out infinite;
+}
+
