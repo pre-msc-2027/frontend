@@ -153,7 +153,6 @@ export interface ApiConfig {
     timeout?: number;
 }
 
-// apiService.ts - Main API service class adapted to your API
 class ApiService {
     private token: string | null = null;
     private config: ApiConfig;
@@ -165,12 +164,10 @@ class ApiService {
         };
     }
 
-    // Set the authentication token
     setToken(token: string): void {
         this.token = token;
     }
 
-    // Get current token
     getToken(): string | null {
         return this.token;
     }
@@ -483,7 +480,7 @@ export class ScanPoller {
 
 // Create and export singleton instance
 const apiConfig: ApiConfig = {
-    baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000',
+    baseUrl: '10.84.108.154:8000',
 };
 
 export const apiService = new ApiService(apiConfig);
@@ -551,7 +548,6 @@ export function useScanSummaries(userId: string) {
     return { summaries, loading, error, refetch: fetchSummaries };
 }
 
-// Custom hook for rules
 export function useRules() {
     const [rules, setRules] = React.useState<RuleOut[]>([]);
     const [loading, setLoading] = React.useState(false);
