@@ -1,4 +1,3 @@
-import React from "react";
 import {
     FaBolt,
     FaSearch,
@@ -16,7 +15,9 @@ const stageIcons = {
     Deploy: <FaRocket />
 };
 
-const stages = [
+type StageLabel = keyof typeof stageIcons;
+
+const stages: { id: number; label: StageLabel }[] = [
     { id: 1, label: "Initialization" },
     { id: 2, label: "Analysis" },
     { id: 3, label: "AI" },
@@ -24,7 +25,8 @@ const stages = [
     { id: 5, label: "Deploy" }
 ];
 
-export default function DevelopmentProgress({ currentStage }) {
+
+    export default function DevelopmentProgress({ currentStage }: { currentStage: number}) {
     return (
         <div className="progress-container">
             {stages.map((stage, index) => (

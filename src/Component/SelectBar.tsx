@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./SelectBar.css";
 
-const fakeData = [
+type Repo = {
+    repo: string;
+    branches: string[];
+}
+
+const fakeData: Repo[] = [
     {
         repo: "frontend-app",
         branches: ["main", "feature/login", "bugfix/navbar"],
@@ -18,10 +23,10 @@ const fakeData = [
 
 export default function RepoBranchDropdown() {
     // State: repos user has added
-    const [addedRepos, setAddedRepos] = useState([]);
+    const [addedRepos, setAddedRepos] = useState<Repo[]>([]);
     const [showModal, setShowModal] = useState(false);
 
-    const handleSelect = (repo, branch) => {
+    const handleSelect = (repo: string, branch: string) => {
         alert(`Redirecting to: ${repo}/${branch}`);
         // For real navigation:
         // window.location.href = `/path/${repo}/${branch}`;
@@ -35,9 +40,9 @@ export default function RepoBranchDropdown() {
         setShowModal(false);
     };
 
-    const handleRepoAdd = (repo) => {
+    const handleRepoAdd = (repo: Repo) => {
         // Avoid duplicates
-        if (!addedRepos.find((r) => r.repo === repo.repo)) {
+        if (!addedRepos.find((r: Repo) => r.repo === repo.repo)) {
             setAddedRepos([...addedRepos, repo]);
         }
         setShowModal(false);
@@ -91,7 +96,7 @@ export default function RepoBranchDropdown() {
                                 key={repo.repo}
                                 className="repo-choice"
                                 onClick={() => handleRepoAdd(repo)}
-                                disabled={addedRepos.find((r) => r.repo === repo.repo)}
+                                disabled={!!addedRepos.find((r: Repo) => r.repo === repo.repo)}
                             >
                                 {repo.repo}
                             </button>
