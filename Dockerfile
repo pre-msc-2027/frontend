@@ -9,11 +9,15 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
+RUN npm install -g serve
+
 # Copy the rest of your application files
 COPY . .
+
+RUN npm run build
 
 # Expose the port your app runs on
 EXPOSE 3000
 
 # Define the command to run your app
-CMD ["npm", "start"]
+ENTRYPOINT ["serve", "-s", "dist"]
