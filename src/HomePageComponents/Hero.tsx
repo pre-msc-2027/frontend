@@ -78,7 +78,7 @@ export const Hero: React.FC = () => {
 
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6 justify-center items-center">
           <button
-            className="group bg-gray-900 hover:bg-gray-800 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-xl"
+            className="group bg-bgsecondary hover:bg-primary text-text px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-xl"
             onClick={handleLogin}
           >
             <span className="text-2xl">Connect GitHub</span>
