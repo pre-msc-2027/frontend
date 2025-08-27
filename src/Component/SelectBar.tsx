@@ -1,5 +1,6 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import "./SelectBar.css";
+import axios from "axios";
 
 interface RepoData {
     repo: string;
@@ -19,67 +20,19 @@ interface UserRepo {
     id: string;
     name: string;
     full_name: string;
-    url: string;
+    html_url: string;
     description?: string;
     private: boolean;
+    branches?: string[];
 }
-
 export default function RepoBranchDropdown() {
-    const [addedRepos, setAddedRepos] = useState<RepoData[]>([
-        {
-            repo: "frontend-app",
-            repo_url: "https://github.com/user/frontend-app",
-            branches: ["main", "feature/login", "bugfix/navbar"],
-        },
-        {
-            repo: "backend-service",
-            repo_url: "https://github.com/user/backend-service",
-            branches: ["master", "develop", "release/v1.0"],
-        },
-    ]);
 
-    const [availableRepos] = useState<UserRepo[]>([
-        {
-            id: "1",
-            name: "frontend-app",
-            full_name: "user/frontend-app",
-            url: "https://github.com/user/frontend-app",
-            description: "React frontend application",
-            private: false,
-        },
-        {
-            id: "2",
-            name: "backend-service",
-            full_name: "user/backend-service",
-            url: "https://github.com/user/backend-service",
-            description: "Node.js API backend service",
-            private: false,
-        },
-        {
-            id: "3",
-            name: "devops-scripts",
-            full_name: "user/devops-scripts",
-            url: "https://github.com/user/devops-scripts",
-            description: "DevOps automation scripts and configurations",
-            private: true,
-        },
-        {
-            id: "4",
-            name: "mobile-app",
-            full_name: "user/mobile-app",
-            url: "https://github.com/user/mobile-app",
-            description: "React Native mobile application",
-            private: false,
-        },
-        {
-            id: "5",
-            name: "data-pipeline",
-            full_name: "user/data-pipeline",
-            url: "https://github.com/user/data-pipeline",
-            description: "Python data processing pipeline",
-            private: true,
-        },
-    ]);
+    const [addedRepos, setAddedRepos] = useState<RepoData[]>([]);
+
+
+    const [availableRepos, setAvailableRepos] = useState<UserRepo[]>([]);
+    const [loading, setLoading] = useState(true);
+
 
     const [fakeAnalyses] = useState<AnalysisData[]>([
         {
@@ -158,7 +111,26 @@ export default function RepoBranchDropdown() {
         // Simulate navigation
         alert(`Would navigate to: /analysis/${scanId}`);
     };
+    const handleSelectRepo = async (repo: UserRepo) => {
+        try {
+            // Fetch branches from backend
+            const branchResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`, {
+                withCredentials: true
+            });
 
+            const newRepo: RepoData = {
+                repo: repo.name,
+                repo_url: repo.html_url,
+                branches: branchResponse.data || [], // assign fetched branches
+            };
+
+            setAddedRepos((prev) => [...prev, newRepo]);
+            setShowModal(false);
+        } catch (err) {
+            console.error("❌ Error fetching branches for repo:", repo.full_name, err);
+            alert(`Failed to fetch branches for ${repo.full_name}`);
+        }
+    };
     const handleBranchSelect = (repo: RepoData, branch: string): void => {
         setSelectedRepo(repo.repo);
         setSelectedBranch(branch);
@@ -174,6 +146,24 @@ export default function RepoBranchDropdown() {
         // If multiple analyses exist, they remain visible in the dropdown
     };
 
+    useEffect(() => {
+        const fetchRepos = async () => {
+            try {
+                console.log('Fetching available repos...');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos`, {
+                    withCredentials: true
+                });
+                console.log('✅ Response data:', response.data);
+                setAvailableRepos(response.data);
+            } catch (err) {
+                console.error('❌ Erreur lors du fetch des repos:', err);
+            }
+        };
+
+        fetchRepos();
+    }, []);
+
+
     const handleAddRepo = (): void => {
         setShowModal(true);
     };
@@ -182,20 +172,7 @@ export default function RepoBranchDropdown() {
         setShowModal(false);
     };
 
-    const handleRepoAdd = (userRepo: UserRepo): void => {
-        const newRepo: RepoData = {
-            repo: userRepo.name,
-            repo_url: userRepo.url,
-            branches: ["main", "develop", "master"], // Default branches
-        };
 
-        if (!addedRepos.find((r) => r.repo === newRepo.repo)) {
-            setAddedRepos([...addedRepos, newRepo]);
-            console.log(`Added repository: ${userRepo.name}`);
-
-        }
-        setShowModal(false);
-    };
 
     const formatScanDate = (scanId: string): string => {
         try {
@@ -345,29 +322,21 @@ export default function RepoBranchDropdown() {
                         <h2>Select a Repository to Add</h2>
 
                         <div className="repo-list">
-                            {availableRepos.map((repo) => {
-                                const isAlreadyAdded = addedRepos.find((r) => r.repo === repo.name);
-                                return (
-                                    <button
-                                        key={repo.id}
-                                        className={`repo-choice ${isAlreadyAdded ? 'disabled' : ''}`}
-                                        onClick={() => handleRepoAdd(repo)}
-                                        disabled={!!isAlreadyAdded}
-                                    >
-                                        <div className="repo-choice-content">
-                                            <div className="repo-choice-name">
-                                                {repo.full_name}
-                                            </div>
-                                            {repo.description && (
-                                                <div className="repo-choice-description">
-                                                    {repo.description}
-                                                </div>
-                                            )}
-                                        </div>
-                                        {isAlreadyAdded && <span className="added-label"> ✓ Added</span>}
-                                    </button>
-                                );
-                            })}
+                            {availableRepos.map((repo) => (
+                                <div
+                                    key={repo.id}
+                                    className="repo-choice"
+                                    onClick={() => handleSelectRepo(repo)}
+                                >
+                                    <div className="repo-choice-content">
+                                        <div className="repo-choice-name">{repo.full_name}</div>
+                                        {repo.description && (
+                                            <div className="repo-choice-description">{repo.description}</div>
+                                        )}
+                                    </div>
+                                    {repo.private && <span className="private-label">Private</span>}
+                                </div>
+                            ))}
                         </div>
 
                         <div className="modal-actions">
