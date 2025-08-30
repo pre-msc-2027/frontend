@@ -125,3 +125,18 @@ app.get('/auth/repos/:repoName/branches', async (req, res) => {
     }
 });
 app.listen(5000, () => console.log('Server running on port 5000'));
+
+//Get rules from external API
+app.get('/rules', async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.API_URL}/rules/`, {
+            withCredentials: true,
+        });
+        const rules = response.data;
+
+        res.json(rules);
+    } catch (err) {
+        console.error("Error when fetching rules:", err);
+        res.status(500).json({ error: "Failed to fetch rules" });
+    }
+});
