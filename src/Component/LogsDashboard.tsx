@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Search, AlertTriangle, Info, AlertCircle, Bug } from 'lucide-react';
+import { Search, AlertTriangle, Info, AlertCircle } from 'lucide-react';
 import './LogsDashboard.css';
 
 interface Log {
     timestamp: number;
     message: string;
-    error?: number | null; // 0 = info, 1 = warning, 2 = error
+    error?: number | null;
 }
 
 interface LogsDashboardProps {

@@ -10,8 +10,8 @@ import "./Dashboard.css";
 import axios from "axios";
 
 interface DashboardProps {
-    scanId: string | null;
-    key: string | null;
+    scanId: string ;
+    key: string;
 }
 interface ScanOptions {
     repo_url: string;
@@ -82,7 +82,7 @@ interface Dependency {
 interface Log {
     timestamp: number;
     message: string;
-    error?: string | null;
+    error?:  number | null;
 }
 
 export interface ScanResult {
@@ -100,7 +100,9 @@ export interface ScanResult {
     logs?: Log[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
+
+
+const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const { theme } = useTheme();
     const [analyse, setAnalyse] = useState<ScanResult | null>(null);
     const [username, setUsername] = useState<string | null>(null);
@@ -263,7 +265,7 @@ const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
                                 {/* Pie Chart  */}
                                 <div className="pie-chart-card flex-[2]">
                                     <div className="flex-1 w-full overflow-hidden">
-                                        <PieChart />
+                                        <PieChart scanId={scanId} />
                                     </div>
                                     <div className="pt-4 w-full text-center">
                                         <h2 className="glass-subtitle">Analysis Overview</h2>
