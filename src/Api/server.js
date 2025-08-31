@@ -54,7 +54,14 @@ app.get('/auth/callback', async (req, res) => {
         const accessToken = tokenResponse.data.access_token;
         req.session.accessToken = accessToken;
 
-        console.log('✅ GitHub token saved in session:', accessToken);
+        // Get the authenticated user's username
+        const userResponse = await axios.get('https://api.github.com/user', {
+            headers: { Authorization: `token ${accessToken}` }
+        });
+        const username = userResponse.data.login;
+        req.session.username = username;
+
+        console.log('✅ GitHub token saved in session:', username);
         res.redirect('http://localhost:5173/dashboard'); // frontend dashboard
     } catch (err) {
         console.error(err);
@@ -100,16 +107,12 @@ app.get('/auth/repos', async (req, res) => {
 
 app.get('/auth/repos/:repoName/branches', async (req, res) => {
     const token = req.session.accessToken;
+    const username = req.session.username;
     const { repoName } = req.params;
 
     if (!token) return res.status(401).json({ error: 'Utilisateur non authentifié' });
 
     try {
-        // Get the authenticated user's username
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${token}` }
-        });
-        const username = userResponse.data.login;
 
         // Fetch branches for the repo
         const branchResponse = await axios.get(
@@ -138,5 +141,24 @@ app.get('/rules', async (req, res) => {
     } catch (err) {
         console.error("Error when fetching rules:", err);
         res.status(500).json({ error: "Failed to fetch rules" });
+    }
+});
+//Get Summary for my User
+app.get('/scans/summary', async (req, res) => {
+    const username = req.session.username;
+    if (!username) {
+        return res.status(401).json({ error: "Unknown User" });
+    }
+    try {
+        const response = await axios.get(`${process.env.API_URL}/scans/summary/${username}/`, {
+            withCredentials: true,
+        });
+
+        const scans = response.data;
+        console.log(JSON.stringify(scans, null, 2));
+        res.json(scans);
+    } catch (err) {
+        console.error("❌ Error when fetching rules:", err);
+        res.status(500).json({ error: "Failed to fetch added Repo" });
     }
 });

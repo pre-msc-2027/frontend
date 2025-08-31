@@ -1,20 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import "./SelectBar.css";
 import axios from "axios";
-
-interface RepoData {
-    repo: string;
-    repo_url: string;
-    branches: string[];
-}
-
-interface AnalysisData {
-    scan_id: string;
-    project_name: string;
-    branch_id: string;
-    repo_url: string;
-    date: string;
-}
+import { useNavigate } from "react-router-dom";
 
 interface UserRepo {
     id: string;
@@ -23,172 +10,109 @@ interface UserRepo {
     html_url: string;
     description?: string;
     private: boolean;
-    branches?: string[];
 }
+
+interface Analysis {
+    scan_id: string;
+    project_name: string;
+    branch_id: string;
+}
+
+interface RepoApiResponse {
+    repo_url: string;
+    analyses: Analysis[];
+}
+
 export default function RepoBranchDropdown() {
-
-    const [addedRepos, setAddedRepos] = useState<RepoData[]>([]);
-
-
+    const navigate = useNavigate();
+    const [addedRepos, setAddedRepos] = useState<RepoApiResponse[]>([]);
     const [availableRepos, setAvailableRepos] = useState<UserRepo[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedRepo, setSelectedRepo] = useState("");
+    const [selectedBranch, setSelectedBranch] = useState("");
+    const [expandedRepo, setExpandedRepo] = useState("");
+    const [expandedBranch, setExpandedBranch] = useState("");
 
-
-    const [fakeAnalyses] = useState<AnalysisData[]>([
-        {
-            scan_id: "1642678800000-abc123",
-            project_name: "Security Scan v1.2",
-            branch_id: "main",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-20",
-        },
-        {
-            scan_id: "1642765200000-def456",
-            project_name: "Code Quality Check",
-            branch_id: "main",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-21",
-        },
-        {
-            scan_id: "1642851600000-ghi789",
-            project_name: "Dependency Audit",
-            branch_id: "feature/login",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-22",
-        },
-        {
-            scan_id: "1642938000000-jkl012",
-            project_name: "Performance Analysis",
-            branch_id: "master",
-            repo_url: "https://github.com/user/backend-service",
-            date: "2024-01-23",
-        },
-        {
-            scan_id: "1643024400000-mno345",
-            project_name: "Security Scan v1.3",
-            branch_id: "develop",
-            repo_url: "https://github.com/user/backend-service",
-            date: "2024-01-24",
-        },
-    ]);
-
-    const [showModal, setShowModal] = useState<boolean>(false);
-    const [selectedRepo, setSelectedRepo] = useState<string>("");
-    const [selectedBranch, setSelectedBranch] = useState<string>("");
-    const [expandedRepo, setExpandedRepo] = useState<string>("");
-    const [expandedBranch, setExpandedBranch] = useState<string>("");
-
-    const getAnalysesForRepo = (repoUrl: string, branchId: string): AnalysisData[] => {
-        return fakeAnalyses.filter(
-            analysis => analysis.repo_url === repoUrl && analysis.branch_id === branchId
-        );
-    };
-
-    const handleRepoClick = (repo: RepoData): void => {
-        if (expandedRepo === repo.repo) {
-            setExpandedRepo("");
-            setExpandedBranch("");
-        } else {
-            setExpandedRepo(repo.repo);
-            setExpandedBranch("");
-            setSelectedRepo(repo.repo);
-        }
-    };
-
-    const handleBranchClick = (repo: RepoData, branch: string): void => {
-        const branchKey = `${repo.repo}-${branch}`;
-
-        if (expandedBranch === branchKey) {
-            setExpandedBranch("");
-        } else {
-            setExpandedBranch(branchKey);
-            setSelectedBranch(branch);
-        }
-    };
-
-    const handleAnalysisSelect = (scanId: string): void => {
-        console.log(`Navigating to analysis: ${scanId}`);
-        // Simulate navigation
-        alert(`Would navigate to: /analysis/${scanId}`);
-    };
-    const handleSelectRepo = async (repo: UserRepo) => {
+    // Get Repo Already Added in the DB
+    const fetchAddedRepos = async () => {
         try {
-            // Fetch branches from backend
-            const branchResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`, {
-                withCredentials: true
-            });
-
-            const newRepo: RepoData = {
-                repo: repo.name,
-                repo_url: repo.html_url,
-                branches: branchResponse.data || [], // assign fetched branches
-            };
-
-            setAddedRepos((prev) => [...prev, newRepo]);
-            setShowModal(false);
+            const response = await axios.get<RepoApiResponse[]>(
+                `${import.meta.env.VITE_API_URL}/scans/summary`,
+                { withCredentials: true }
+            );
+            setAddedRepos(response.data);
         } catch (err) {
-            console.error("❌ Error fetching branches for repo:", repo.full_name, err);
-            alert(`Failed to fetch branches for ${repo.full_name}`);
+            console.error("Error fetching added repos:", err);
         }
     };
-    const handleBranchSelect = (repo: RepoData, branch: string): void => {
-        setSelectedRepo(repo.repo);
-        setSelectedBranch(branch);
 
-        const analyses = getAnalysesForRepo(repo.repo_url, branch);
-
-        if (analyses.length === 0) {
-            console.log(`No analyses for ${repo.repo}/${branch}, would create new`);
-            alert(`Would navigate to: /dashboard?repo=${repo.repo_url}&branch=${branch}`);
-        } else if (analyses.length === 1) {
-            handleAnalysisSelect(analyses[0].scan_id);
+    // Get repo from github account
+    const fetchAvailableRepos = async () => {
+        try {
+            const response = await axios.get<UserRepo[]>(
+                `${import.meta.env.VITE_API_URL}/auth/repos`,
+                { withCredentials: true }
+            );
+            setAvailableRepos(response.data);
+        } catch (err) {
+            console.error("Error fetching available repos:", err);
         }
-        // If multiple analyses exist, they remain visible in the dropdown
     };
 
     useEffect(() => {
-        const fetchRepos = async () => {
-            try {
-                console.log('Fetching available repos...');
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos`, {
-                    withCredentials: true
-                });
-                console.log('✅ Response data:', response.data);
-                setAvailableRepos(response.data);
-            } catch (err) {
-                console.error('❌ Erreur lors du fetch des repos:', err);
-            }
-        };
-
-        fetchRepos();
+        fetchAddedRepos();
+        fetchAvailableRepos();
     }, []);
 
-
-    const handleAddRepo = (): void => {
-        setShowModal(true);
+    const handleRepoClick = (repoUrl: string) => {
+        setExpandedRepo(prev => (prev === repoUrl ? "" : repoUrl));
+        setExpandedBranch("");
+        setSelectedRepo(repoUrl);
     };
 
-    const handleModalClose = (): void => {
-        setShowModal(false);
+    const handleBranchClick = (repoUrl: string, branchName: string) => {
+        const branchKey = `${repoUrl}-${branchName}`;
+        setExpandedBranch(prev => (prev === branchKey ? "" : branchKey));
+        setSelectedBranch(branchName);
+    };
+
+
+    const handleBranchSelect = (repoUrl: string, branchName: string, scan_id: string) => {
+        navigate(
+            `/dashboard?repo=${encodeURIComponent(repoUrl)}&branch=${encodeURIComponent(branchName)}&scan=${encodeURIComponent(scan_id)}`
+
+        );
     };
 
 
 
-    const formatScanDate = (scanId: string): string => {
+    const handleSelectRepo = async (repo: UserRepo) => {
         try {
-            const timestamp = parseInt(scanId.split('-')[0]) || Date.now();
-            return new Date(timestamp).toLocaleDateString();
-        } catch {
-            return new Date().toLocaleDateString();
+            const branchResponse = await axios.get<string[]>(
+                `${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`,
+                { withCredentials: true }
+            );
+            const newRepo: RepoApiResponse = {
+                repo_url: repo.html_url,
+                analyses: branchResponse.data.map(branch => ({
+                    scan_id: `new-${branch}`,
+                    project_name: branch,
+                    branch_id: branch
+                }))
+            };
+            setAddedRepos(prev => [...prev, newRepo]);
+            setShowModal(false);
+        } catch (err) {
+            console.error("Error fetching branches for repo:", repo.full_name, err);
         }
     };
 
-    const updateSearchBarPlaceholder = (): string => {
-        if (selectedRepo && selectedBranch) {
-            return `${selectedRepo} / ${selectedBranch}`;
-        } else if (selectedRepo) {
-            return `${selectedRepo} - Select branch...`;
-        }
+    const handleAddRepo = () => setShowModal(true);
+    const handleModalClose = () => setShowModal(false);
+
+    const updateSearchBarPlaceholder = () => {
+        if (selectedRepo && selectedBranch) return `${selectedRepo} / ${selectedBranch}`;
+        if (selectedRepo) return `${selectedRepo} - Select branch...`;
         return "Select repository, branch, and analysis...";
     };
 
@@ -205,145 +129,88 @@ export default function RepoBranchDropdown() {
                     {addedRepos.length === 0 ? (
                         <div className="repo-item">No repositories added yet.</div>
                     ) : (
-                        addedRepos.map((repo) => (
-                            <div key={repo.repo} className="repo-item">
-                                <div
-                                    className={`repo-name ${expandedRepo === repo.repo ? 'expanded' : ''}`}
-                                    onClick={() => handleRepoClick(repo)}
-                                >
-                                    {repo.repo}
-                                    <span className="expand-icon">
-                                        {expandedRepo === repo.repo ? '▼' : '▶'}
-                                    </span>
-                                </div>
+                        addedRepos.map(repo => {
+                            const branchMap: Record<string, Analysis[]> = {};
+                            repo.analyses.forEach(a => {
+                                if (!branchMap[a.branch_id]) branchMap[a.branch_id] = [];
+                                branchMap[a.branch_id].push(a);
+                            });
 
-                                {expandedRepo === repo.repo && (
-                                    <div className="branch-list">
-                                        {repo.branches.map((branch) => {
-                                            const analyses = getAnalysesForRepo(repo.repo_url, branch);
-                                            const branchKey = `${repo.repo}-${branch}`;
-                                            const isExpanded = expandedBranch === branchKey;
-
-                                            return (
-                                                <div key={branch} className="branch-group">
-                                                    <div
-                                                        className={`branch-name ${isExpanded ? 'expanded' : ''}`}
-                                                        onClick={() => handleBranchClick(repo, branch)}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                e.preventDefault();
-                                                                handleBranchClick(repo, branch);
-                                                            }
-                                                        }}
-                                                        tabIndex={0}
-                                                        role="button"
-                                                    >
-                                                        {branch}
-                                                        <span className="branch-info">
-                                                            {analyses.length === 0 && (
-                                                                <span className="no-analysis"> (No analyses)</span>
-                                                            )}
-                                                            {analyses.length === 1 && (
-                                                                <span className="single-analysis"> (1 analysis)</span>
-                                                            )}
-                                                            {analyses.length > 1 && (
-                                                                <span className="multiple-analyses"> ({analyses.length} analyses)</span>
-                                                            )}
-                                                        </span>
-                                                        <span className="expand-icon">
-                                                            {isExpanded ? '▼' : '▶'}
-                                                        </span>
-                                                    </div>
-
-                                                    {isExpanded && (
-                                                        <div className="analysis-list">
-                                                            {analyses.length === 0 ? (
-                                                                <div
-                                                                    className="analysis-item create-new"
-                                                                    onClick={() => handleBranchSelect(repo, branch)}
-                                                                    onKeyDown={(e) => {
-                                                                        if (e.key === 'Enter' || e.key === ' ') {
-                                                                            e.preventDefault();
-                                                                            handleBranchSelect(repo, branch);
-                                                                        }
-                                                                    }}
-                                                                    tabIndex={0}
-                                                                    role="button"
-                                                                    aria-label="Create new analysis"
-                                                                >
-                                                                    Create new analysis
-                                                                </div>
-                                                            ) : (
-                                                                analyses.map((analysis) => (
-                                                                    <div
-                                                                        key={analysis.scan_id}
-                                                                        className="analysis-item"
-                                                                        onClick={() => handleAnalysisSelect(analysis.scan_id)}
-                                                                        onKeyDown={(e) => {
-                                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                                e.preventDefault();
-                                                                                handleAnalysisSelect(analysis.scan_id);
-                                                                            }
-                                                                        }}
-                                                                        tabIndex={0}
-                                                                        role="button"
-                                                                        title={`Click to view analysis: ${analysis.scan_id}`}
-                                                                        aria-label={`View analysis: ${analysis.project_name}`}
-                                                                    >
-                                                                         {analysis.project_name}
-                                                                        <span className="analysis-date">
-                                                                          ({formatScanDate(analysis.scan_id)})
-                                                                        </span>
-                                                                    </div>
-                                                                ))
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                            return (
+                                <div key={repo.repo_url} className="repo-item">
+                                    <div
+                                        className={`repo-name ${expandedRepo === repo.repo_url ? "expanded" : ""}`}
+                                        onClick={() => handleRepoClick(repo.repo_url)}
+                                    >
+                                        {repo.repo_url.split("/").pop()}{" "}
+                                        <span>{expandedRepo === repo.repo_url ? "▼" : "▶"}</span>
                                     </div>
-                                )}
-                            </div>
-                        ))
+
+                                    {expandedRepo === repo.repo_url && (
+                                        <div className="branch-list">
+                                            {Object.entries(branchMap).map(([branchName, analyses]) => {
+                                                const branchKey = `${repo.repo_url}-${branchName}`;
+                                                return (
+                                                    <div key={branchName} className="branch-group">
+                                                        <div
+                                                            className={`branch-name ${expandedBranch === branchKey ? "expanded" : ""}`}
+                                                            onClick={() => handleBranchClick(repo.repo_url, branchName)}
+                                                        >
+                                                            {branchName} <span>{expandedBranch === branchKey ? "▼" : "▶"}</span>
+                                                        </div>
+
+                                                        {expandedBranch === branchKey && (
+                                                            <div className="analysis-list">
+                                                                {analyses.length === 0 ? (
+                                                                    <div
+                                                                        className="analysis-item create-new"
+                                                                        onClick={() => handleBranchSelect(repo.repo_url, branchName)}
+                                                                    >
+                                                                        Create new analysis
+                                                                    </div>
+                                                                ) : (
+                                                                    analyses.map(a => (
+                                                                        <div
+                                                                            key={a.scan_id}
+                                                                            className="analysis-item"
+                                                                            onClick={() => handleBranchSelect(repo.repo_url, branchName, a.scan_id )}
+                                                                        >
+                                                                            <p className="text-purple-500">Go to the Analyse</p>
+                                                                        </div>
+                                                                    ))
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
                     )}
                 </div>
-                <button className="add-repo-button" onClick={handleAddRepo}>
-                    + Add Repo
-                </button>
+                <button className="add-repo-button" onClick={handleAddRepo}>+ Add Repo</button>
             </div>
 
             {showModal && (
                 <div className="modal-overlay" onClick={handleModalClose}>
-                    <div
-                        className="modal-content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <h2>Select a Repository to Add</h2>
-
                         <div className="repo-list">
-                            {availableRepos.map((repo) => (
-                                <div
-                                    key={repo.id}
-                                    className="repo-choice"
-                                    onClick={() => handleSelectRepo(repo)}
-                                >
+                            {availableRepos.map(repo => (
+                                <div key={repo.id} className="repo-choice" onClick={() => handleSelectRepo(repo)}>
                                     <div className="repo-choice-content">
                                         <div className="repo-choice-name">{repo.full_name}</div>
-                                        {repo.description && (
-                                            <div className="repo-choice-description">{repo.description}</div>
-                                        )}
+                                        {repo.description && <div className="repo-choice-description">{repo.description}</div>}
                                     </div>
                                     {repo.private && <span className="private-label">Private</span>}
                                 </div>
                             ))}
                         </div>
-
                         <div className="modal-actions">
-                            <button className="cancel-button" onClick={handleModalClose}>
-                                Cancel
-
-                            </button>
+                            <button className="cancel-button" onClick={handleModalClose}>Cancel</button>
                         </div>
                     </div>
                 </div>
