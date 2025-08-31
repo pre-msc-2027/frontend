@@ -169,6 +169,7 @@ export default function RepoBranchDropdown() {
 
             // Optionally show success message
             alert("Scan created successfully!");
+            handleAnalysisSelect(response.data.scan_id);
 
         } catch (err) {
             console.error("❌ Failed to create scan:", err);
@@ -177,9 +178,9 @@ export default function RepoBranchDropdown() {
     };
     async function fetchUserRepos() {
         try {
-            const userInfo = await fetch("/auth/userinfo").then(res => res.json());
-            console.log(userInfo);
-            const response = await axios.get(`http://localhost:8001/repositories/user/${userInfo.username}`);
+            const userInfo = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+            const username = userInfo.data.username;
+            const response = await axios.get(`http://localhost:8001/repositories/user/${username}`);
             const repos = response.data;
 
             console.log("📂 Saved repos from backend:", repos);
