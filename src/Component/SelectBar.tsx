@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
-import "./SelectBar.css";
+
+import { useEffect, useState } from "react";
 import axios from "axios";
+import "./SelectBar.css";
 
 interface RepoData {
     repo: string;
@@ -25,172 +26,178 @@ interface UserRepo {
     private: boolean;
     branches?: string[];
 }
+
 export default function RepoBranchDropdown() {
-
+    const [username, setUsername] = useState<string | null>(null);
     const [addedRepos, setAddedRepos] = useState<RepoData[]>([]);
-
-
     const [availableRepos, setAvailableRepos] = useState<UserRepo[]>([]);
-    const [loading, setLoading] = useState(true);
-
-
-    const [fakeAnalyses] = useState<AnalysisData[]>([
-        {
-            scan_id: "1642678800000-abc123",
-            project_name: "Security Scan v1.2",
-            branch_id: "main",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-20",
-        },
-        {
-            scan_id: "1642765200000-def456",
-            project_name: "Code Quality Check",
-            branch_id: "main",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-21",
-        },
-        {
-            scan_id: "1642851600000-ghi789",
-            project_name: "Dependency Audit",
-            branch_id: "feature/login",
-            repo_url: "https://github.com/user/frontend-app",
-            date: "2024-01-22",
-        },
-        {
-            scan_id: "1642938000000-jkl012",
-            project_name: "Performance Analysis",
-            branch_id: "master",
-            repo_url: "https://github.com/user/backend-service",
-            date: "2024-01-23",
-        },
-        {
-            scan_id: "1643024400000-mno345",
-            project_name: "Security Scan v1.3",
-            branch_id: "develop",
-            repo_url: "https://github.com/user/backend-service",
-            date: "2024-01-24",
-        },
-    ]);
-
-    const [showModal, setShowModal] = useState<boolean>(false);
-    const [selectedRepo, setSelectedRepo] = useState<string>("");
-    const [selectedBranch, setSelectedBranch] = useState<string>("");
+    const [userAnalyses, setUserAnalyses] = useState<AnalysisData[]>([]);
+    const [showModal, setShowModal] = useState(false);
     const [expandedRepo, setExpandedRepo] = useState<string>("");
     const [expandedBranch, setExpandedBranch] = useState<string>("");
 
-    const getAnalysesForRepo = (repoUrl: string, branchId: string): AnalysisData[] => {
-        return fakeAnalyses.filter(
-            analysis => analysis.repo_url === repoUrl && analysis.branch_id === branchId
-        );
-    };
+    // Fetch logged-in user info
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+                setUsername(res.data.username);
+            } catch (err) {
+                console.error("❌ Failed to fetch user info:", err);
+            }
+        };
+        fetchUser();
+    }, []);
 
-    const handleRepoClick = (repo: RepoData): void => {
+    // Fetch repos and analyses after username is available
+    useEffect(() => {
+        if (!username) return;
+
+        const fetchData = async () => {
+            try {
+                // Saved repos
+                const repoRes = await axios.get(`http://localhost:8001/repositories/user/${username}`);
+                const repos: RepoData[] = repoRes.data.map((r: any) => ({
+                    repo: r.name,
+                    repo_url: r.repo_url,
+                    branches: r.branches || [],
+                }));
+                setAddedRepos(repos);
+
+                // User scans/analyses
+                const scansRes = await axios.get(`http://localhost:8001/scans/summary/${username}`);
+                const analyses: AnalysisData[] = [];
+                scansRes.data.forEach((r: any) => {
+                    r.analyses.forEach((a: any) => {
+                        analyses.push({
+                            scan_id: a.scan_id,
+                            project_name: a.project_name,
+                            branch_id: a.branch_id,
+                            repo_url: r.repo_url,
+                            date: new Date(parseInt(a.scan_id)).toLocaleDateString(),
+                        });
+                    });
+                });
+                setUserAnalyses(analyses);
+
+                // Available GitHub repos
+                const ghRes = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos`, { withCredentials: true });
+                setAvailableRepos(ghRes.data);
+            } catch (err) {
+                console.error("❌ Failed to fetch data:", err);
+            }
+        };
+
+        fetchData();
+    }, [username]);
+
+    const getAnalysesForRepo = (repoUrl: string, branchId: string) =>
+        userAnalyses.filter(a => a.repo_url === repoUrl && a.branch_id === branchId);
+
+    const handleRepoClick = (repo: RepoData) => {
         if (expandedRepo === repo.repo) {
             setExpandedRepo("");
             setExpandedBranch("");
         } else {
             setExpandedRepo(repo.repo);
             setExpandedBranch("");
-            setSelectedRepo(repo.repo);
         }
     };
 
-    const handleBranchClick = (repo: RepoData, branch: string): void => {
-        const branchKey = `${repo.repo}-${branch}`;
-
-        if (expandedBranch === branchKey) {
-            setExpandedBranch("");
-        } else {
-            setExpandedBranch(branchKey);
-            setSelectedBranch(branch);
-        }
+    const handleBranchClick = (repo: RepoData, branch: string) => {
+        const key = `${repo.repo}-${branch}`;
+        setExpandedBranch(expandedBranch === key ? "" : key);
     };
 
-    const handleAnalysisSelect = (scanId: string): void => {
-        console.log(`Navigating to analysis: ${scanId}`);
-        // Simulate navigation
-        alert(`Would navigate to: /analysis/${scanId}`);
+    const handleAnalysisSelect = (scanId: string) => {
+        alert(`Navigate to: /analysis/${scanId}`);
     };
+
+    const handleAddRepo = () => setShowModal(true);
+    const handleModalClose = () => setShowModal(false);
+
     const handleSelectRepo = async (repo: UserRepo) => {
         try {
-            // Fetch branches from backend
-            const branchResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`, {
-                withCredentials: true
-            });
+            const userInfo = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+            const branchRes = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`, { withCredentials: true });
+            const branches = branchRes.data;
 
-            const newRepo: RepoData = {
-                repo: repo.name,
+            const payload = {
+                username: userInfo.data.username,
                 repo_url: repo.html_url,
-                branches: branchResponse.data || [], // assign fetched branches
+                name: repo.name,
+                rules: [],
+                branches,
             };
 
-            setAddedRepos((prev) => [...prev, newRepo]);
+            await axios.post("http://localhost:8001/repositories/", payload, { withCredentials: true });
+            setAddedRepos(prev => [...prev, { repo: repo.name, repo_url: repo.html_url, branches }]);
             setShowModal(false);
-        } catch (err) {
-            console.error("❌ Error fetching branches for repo:", repo.full_name, err);
-            alert(`Failed to fetch branches for ${repo.full_name}`);
+        } catch (err: any) {
+            if (err.response?.status === 400) alert("Repo already exists in backend");
+            else console.error("❌ Failed to save repo:", err);
         }
     };
-    const handleBranchSelect = (repo: RepoData, branch: string): void => {
-        setSelectedRepo(repo.repo);
-        setSelectedBranch(branch);
-
-        const analyses = getAnalysesForRepo(repo.repo_url, branch);
-
-        if (analyses.length === 0) {
-            console.log(`No analyses for ${repo.repo}/${branch}, would create new`);
-            alert(`Would navigate to: /dashboard?repo=${repo.repo_url}&branch=${branch}`);
-        } else if (analyses.length === 1) {
-            handleAnalysisSelect(analyses[0].scan_id);
-        }
-        // If multiple analyses exist, they remain visible in the dropdown
-    };
-
-    useEffect(() => {
-        const fetchRepos = async () => {
-            try {
-                console.log('Fetching available repos...');
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos`, {
-                    withCredentials: true
-                });
-                console.log('✅ Response data:', response.data);
-                setAvailableRepos(response.data);
-            } catch (err) {
-                console.error('❌ Erreur lors du fetch des repos:', err);
-            }
-        };
-
-        fetchRepos();
-    }, []);
-
-
-    const handleAddRepo = (): void => {
-        setShowModal(true);
-    };
-
-    const handleModalClose = (): void => {
-        setShowModal(false);
-    };
-
-
-
-    const formatScanDate = (scanId: string): string => {
+    const handleCreateScan = async (repo: RepoData, branch: string) => {
+        const userInfo = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+        const username = userInfo.data.username;
         try {
-            const timestamp = parseInt(scanId.split('-')[0]) || Date.now();
-            return new Date(timestamp).toLocaleDateString();
-        } catch {
-            return new Date().toLocaleDateString();
-        }
-    };
+            console.log(username)
+            const response = await axios.post("http://localhost:8001/scans", {
+                project_name: repo.repo,         // "T-DOP-601-Popeye"
+                scanned_by: username,            // e.g. "arthur-bartczak"
+                scan_version: "1.0.0",           // or just "latest"
+                scan_options: {
+                    repo_url: repo.repo_url,
+                    branch_id: branch
+                },
+                auth_context: {
+                    user_id: username,
+                    user_role: "user",
+                    session_id: "fake-session"
+                },
+                notes: "Auto scan from UI"
+            });
 
-    const updateSearchBarPlaceholder = (): string => {
-        if (selectedRepo && selectedBranch) {
-            return `${selectedRepo} / ${selectedBranch}`;
-        } else if (selectedRepo) {
-            return `${selectedRepo} - Select branch...`;
+            console.log("✅ Scan created:", response.data);
+
+            // Refresh the data after creating scan
+            await fetchUserRepos(); // or fetchReposAndScans() if that function exists and works
+
+            // Optionally show success message
+            alert("Scan created successfully!");
+
+        } catch (err) {
+            console.error("❌ Failed to create scan:", err);
+            alert("Failed to create scan. Please try again.");
         }
-        return "Select repository, branch, and analysis...";
     };
+    async function fetchUserRepos() {
+        try {
+            const userInfo = await fetch("/auth/userinfo").then(res => res.json());
+            console.log(userInfo);
+            const response = await axios.get(`http://localhost:8001/repositories/user/${userInfo.username}`);
+            const repos = response.data;
+
+            console.log("📂 Saved repos from backend:", repos);
+
+            // Update the dropdown list (addedRepos)
+            const formattedRepos: RepoData[] = repos.map((r) => ({
+                repo: r.name,
+                repo_url: r.repo_url,
+                branches: r.branches || []
+            }));
+
+            setAddedRepos(formattedRepos);
+
+        } catch (err) {
+            console.error("❌ Error fetching saved repos:", err);
+        }
+    }
+
+    const availableToAdd = availableRepos.filter(r => !addedRepos.some(ar => ar.repo_url === r.html_url));
+
+    const formatScanDate = (scanId: string) => new Date(parseInt(scanId.split('-')[0])).toLocaleDateString();
 
     return (
         <div className="dropdown-container">
@@ -198,102 +205,47 @@ export default function RepoBranchDropdown() {
                 <input
                     type="text"
                     className="search-bar"
-                    placeholder={updateSearchBarPlaceholder()}
+                    placeholder="Select repository, branch, and analysis..."
                     readOnly
                 />
                 <div className="dropdown-menu">
                     {addedRepos.length === 0 ? (
                         <div className="repo-item">No repositories added yet.</div>
                     ) : (
-                        addedRepos.map((repo) => (
+                        addedRepos.map(repo => (
                             <div key={repo.repo} className="repo-item">
-                                <div
-                                    className={`repo-name ${expandedRepo === repo.repo ? 'expanded' : ''}`}
-                                    onClick={() => handleRepoClick(repo)}
-                                >
-                                    {repo.repo}
-                                    <span className="expand-icon">
-                                        {expandedRepo === repo.repo ? '▼' : '▶'}
-                                    </span>
+                                <div className={`repo-name ${expandedRepo === repo.repo ? "expanded" : ""}`} onClick={() => handleRepoClick(repo)}>
+                                    {repo.repo} <span className="expand-icon">{expandedRepo === repo.repo ? '▼' : '▶'}</span>
                                 </div>
-
                                 {expandedRepo === repo.repo && (
                                     <div className="branch-list">
-                                        {repo.branches.map((branch) => {
+                                        {repo.branches.map(branch => {
                                             const analyses = getAnalysesForRepo(repo.repo_url, branch);
-                                            const branchKey = `${repo.repo}-${branch}`;
-                                            const isExpanded = expandedBranch === branchKey;
-
+                                            const key = `${repo.repo}-${branch}`;
+                                            const isExpanded = expandedBranch === key;
                                             return (
                                                 <div key={branch} className="branch-group">
-                                                    <div
-                                                        className={`branch-name ${isExpanded ? 'expanded' : ''}`}
-                                                        onClick={() => handleBranchClick(repo, branch)}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                e.preventDefault();
-                                                                handleBranchClick(repo, branch);
-                                                            }
-                                                        }}
-                                                        tabIndex={0}
-                                                        role="button"
-                                                    >
-                                                        {branch}
-                                                        <span className="branch-info">
-                                                            {analyses.length === 0 && (
-                                                                <span className="no-analysis"> (No analyses)</span>
-                                                            )}
-                                                            {analyses.length === 1 && (
-                                                                <span className="single-analysis"> (1 analysis)</span>
-                                                            )}
-                                                            {analyses.length > 1 && (
-                                                                <span className="multiple-analyses"> ({analyses.length} analyses)</span>
-                                                            )}
-                                                        </span>
-                                                        <span className="expand-icon">
-                                                            {isExpanded ? '▼' : '▶'}
-                                                        </span>
+                                                    <div className={`branch-name ${isExpanded ? "expanded" : ""}`} onClick={() => handleBranchClick(repo, branch)}>
+                                                        {branch} <span className="branch-info">
+                              {analyses.length === 0 && " (No analyses)"}
+                                                        {analyses.length === 1 && " (1 analysis)"}
+                                                        {analyses.length > 1 && ` (${analyses.length} analyses)`}
+                            </span>
+                                                        <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
                                                     </div>
-
                                                     {isExpanded && (
                                                         <div className="analysis-list">
                                                             {analyses.length === 0 ? (
                                                                 <div
                                                                     className="analysis-item create-new"
-                                                                    onClick={() => handleBranchSelect(repo, branch)}
-                                                                    onKeyDown={(e) => {
-                                                                        if (e.key === 'Enter' || e.key === ' ') {
-                                                                            e.preventDefault();
-                                                                            handleBranchSelect(repo, branch);
-                                                                        }
-                                                                    }}
-                                                                    tabIndex={0}
-                                                                    role="button"
-                                                                    aria-label="Create new analysis"
+                                                                    onClick={() => handleCreateScan(repo, branch)}
                                                                 >
                                                                     Create new analysis
                                                                 </div>
                                                             ) : (
-                                                                analyses.map((analysis) => (
-                                                                    <div
-                                                                        key={analysis.scan_id}
-                                                                        className="analysis-item"
-                                                                        onClick={() => handleAnalysisSelect(analysis.scan_id)}
-                                                                        onKeyDown={(e) => {
-                                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                                e.preventDefault();
-                                                                                handleAnalysisSelect(analysis.scan_id);
-                                                                            }
-                                                                        }}
-                                                                        tabIndex={0}
-                                                                        role="button"
-                                                                        title={`Click to view analysis: ${analysis.scan_id}`}
-                                                                        aria-label={`View analysis: ${analysis.project_name}`}
-                                                                    >
-                                                                         {analysis.project_name}
-                                                                        <span className="analysis-date">
-                                                                          ({formatScanDate(analysis.scan_id)})
-                                                                        </span>
+                                                                analyses.map(a => (
+                                                                    <div key={a.scan_id} className="analysis-item" onClick={() => handleAnalysisSelect(a.scan_id)}>
+                                                                        {a.project_name} <span className="analysis-date">({formatScanDate(a.scan_id)})</span>
                                                                     </div>
                                                                 ))
                                                             )}
@@ -308,42 +260,27 @@ export default function RepoBranchDropdown() {
                         ))
                     )}
                 </div>
-                <button className="add-repo-button" onClick={handleAddRepo}>
-                    + Add Repo
-                </button>
+                <button className="add-repo-button" onClick={handleAddRepo}>+ Add Repo</button>
             </div>
 
             {showModal && (
                 <div className="modal-overlay" onClick={handleModalClose}>
-                    <div
-                        className="modal-content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <h2>Select a Repository to Add</h2>
-
                         <div className="repo-list">
-                            {availableRepos.map((repo) => (
-                                <div
-                                    key={repo.id}
-                                    className="repo-choice"
-                                    onClick={() => handleSelectRepo(repo)}
-                                >
+                            {availableToAdd.length === 0 && <div>All repos are already added</div>}
+                            {availableToAdd.map(repo => (
+                                <div key={repo.id} className="repo-choice">
                                     <div className="repo-choice-content">
                                         <div className="repo-choice-name">{repo.full_name}</div>
-                                        {repo.description && (
-                                            <div className="repo-choice-description">{repo.description}</div>
-                                        )}
+                                        {repo.description && <div className="repo-choice-description">{repo.description}</div>}
                                     </div>
-                                    {repo.private && <span className="private-label">Private</span>}
+                                    <button onClick={() => handleSelectRepo(repo)}>Add</button>
                                 </div>
                             ))}
                         </div>
-
                         <div className="modal-actions">
-                            <button className="cancel-button" onClick={handleModalClose}>
-                                Cancel
-
-                            </button>
+                            <button className="cancel-button" onClick={handleModalClose}>Cancel</button>
                         </div>
                     </div>
                 </div>

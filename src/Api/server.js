@@ -54,12 +54,33 @@ app.get('/auth/callback', async (req, res) => {
         const accessToken = tokenResponse.data.access_token;
         req.session.accessToken = accessToken;
 
-        console.log('✅ GitHub token saved in session:', accessToken);
+        // 🔑 Fetch user info to store username in session
+        const userResponse = await axios.get('https://api.github.com/user', {
+            headers: { Authorization: `token ${accessToken}` }
+        });
+
+        req.session.username = userResponse.data.login;
+        console.log(`✅ GitHub user authenticated: ${req.session.username}`);
+
         res.redirect('http://localhost:5173/dashboard'); // frontend dashboard
     } catch (err) {
-        console.error(err);
+        console.error(err.response?.data || err.message);
         res.status(500).send('Erreur serveur');
     }
+});
+
+app.get('/auth/userinfo', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const userInfo = {
+        username: req.session.username,
+        accessToken: req.session.accessToken // optional, usually don’t send token to frontend
+    };
+
+    console.log("📌 Returning user info to frontend:", userInfo);
+    res.json(userInfo);
 });
 
 // 3. Fetch authenticated user's repos
@@ -100,28 +121,32 @@ app.get('/auth/repos', async (req, res) => {
 
 app.get('/auth/repos/:repoName/branches', async (req, res) => {
     const token = req.session.accessToken;
+    const username = req.session.username;
     const { repoName } = req.params;
 
-    if (!token) return res.status(401).json({ error: 'Utilisateur non authentifié' });
+    console.log("➡️ /auth/repos/:repoName/branches called");
+    console.log("Session object:", req.session);
+
+    if (!token || !username) {
+        console.log("❌ No access token or username in session");
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
 
     try {
-        // Get the authenticated user's username
-        const userResponse = await axios.get('https://api.github.com/user', {
-            headers: { Authorization: `token ${token}` }
-        });
-        const username = userResponse.data.login;
+        console.log(`Fetching branch0es for ${username}/${repoName} from GitHub...`);
 
-        // Fetch branches for the repo
         const branchResponse = await axios.get(
             `https://api.github.com/repos/${username}/${repoName}/branches`,
             { headers: { Authorization: `token ${token}` } }
         );
 
-        const branches = branchResponse.data.map(branch => branch.name);
+        const branches = branchResponse.data.map(b => b.name);
+        console.log("🌿 Branches fetched:", branches);
         res.json(branches);
-    } catch (error) {
-        console.error('❌ Error fetching branches:', error.response?.data || error.message);
+    } catch (err) {
+        console.error('❌ Error fetching branches:', err.response?.data || err.message);
         res.status(500).json({ error: 'Impossible de récupérer les branches' });
     }
 });
+
 app.listen(5000, () => console.log('Server running on port 5000'));
