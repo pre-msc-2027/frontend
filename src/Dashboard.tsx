@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PieChart from "./Component/PieChart.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
 import RepoBranchDropdown from "./Component/SelectBar.tsx";
@@ -7,9 +7,17 @@ import LogsDashboard from "./Component/LogsDashboard.tsx";
 import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 import { useTheme } from "./useTheme";
 import "./Dashboard.css";
+import axios from "axios";
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+    scanId: string | null;
+    key: string | null;
+}
+
+
+const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
     const { theme } = useTheme();
+
 
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>

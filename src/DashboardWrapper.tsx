@@ -9,7 +9,7 @@ const DashboardWrapper: React.FC = () => {
 
     const scan = encodedScan ? atob(encodedScan) : null;
 
-    return <Dashboard key={scan} />;
+    return <Dashboard key={scan} scanId={scan} />;
 };
 
 export default DashboardWrapper;
