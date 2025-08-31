@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PieChart from "./Component/PieChart.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
 import RepoBranchDropdown from "./Component/SelectBar.tsx";
@@ -7,9 +7,125 @@ import LogsDashboard from "./Component/LogsDashboard.tsx";
 import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 import { useTheme } from "./useTheme";
 import "./Dashboard.css";
+import axios from "axios";
 
-const Dashboard: React.FC = () => {
+
+interface DashboardProps {
+    scanId: string | null;
+}
+
+interface ScanOptions {
+    repo_url: string;
+    use_ai_assistance: boolean;
+    max_depth: number;
+    follow_symlinks: boolean;
+    target_type: string;
+    target_files: string[];
+    severity_min: "low" | "medium" | "high" | string;
+    branch_id: string;
+    commit_hash: string;
+}
+
+interface AuthContext {
+    user_id: string;
+    user_role: string;
+    session_id: string;
+}
+
+interface Vulnerability {
+    file: string;
+    line: number;
+    type: string;
+    severity: "low" | "medium" | "high" | "critical" | string;
+    description: string;
+    recommendation: string;
+}
+
+interface Warning {
+    file: string;
+    line: number;
+    rule_id: number;
+    id: number;
+}
+
+interface AnalysisSummary {
+    total_files: number;
+    files_with_vulnerabilities: number;
+    vulnerabilities_found: number;
+}
+
+interface Analysis {
+    status: string;
+    summary: AnalysisSummary;
+    vulnerabilities: Vulnerability[];
+    warnings: Warning[];
+}
+
+interface AIComment {
+    warning_id: number;
+    original: string;
+    fixed: string;
+}
+
+interface DependencyVulnerability {
+    cve_id: string;
+    severity: "low" | "medium" | "high" | "critical" | string;
+    description: string;
+    recommendation: string;
+}
+
+interface Dependency {
+    name: string;
+    version: string;
+    vulnerability?: DependencyVulnerability;
+}
+
+interface Log {
+    timestamp: number;
+    message: string;
+    error?: string | null;
+}
+
+export interface ScanResult {
+    scan_id: string;
+    timestamp: string; // ISO string
+    project_name: string;
+    scanned_by: string;
+    scan_version: string;
+    scan_options: ScanOptions;
+    auth_context: AuthContext;
+    notes?: string;
+    analysis: Analysis;
+    ai_comment?: AIComment[];
+    dependencies?: Dependency[];
+    logs?: Log[];
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const { theme } = useTheme();
+
+    // Get analyse
+    const fetchScan = async () => {
+        try {
+            const response = await axios.get<ScanResult>(
+                `${import.meta.env.VITE_API_URL}/scans`,
+                {
+                    withCredentials: true,
+                    params: { scan_id: scanId }
+                }
+            );
+            console.log(response.data);
+        } catch (err) {
+            console.error("Error fetching available scan:", err);
+        }
+    }
+    useEffect(() => {
+        if (scanId != null){
+            fetchScan();
+        }
+    }, [scanId]);
+
+
 
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>

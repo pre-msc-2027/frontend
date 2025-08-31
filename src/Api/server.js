@@ -155,11 +155,32 @@ app.get('/scans/summary', async (req, res) => {
         });
 
         const scans = response.data;
-        console.log(JSON.stringify(scans, null, 2));
         res.json(scans);
     } catch (err) {
-        console.error("❌ Error when fetching rules:", err);
-        res.status(500).json({ error: "Failed to fetch added Repo" });
+        console.error("❌ Error when fetching Repos:", err);
+        res.status(500).json({ error: "Failed to fetch added Repos" });
+    }
+});
+
+//GET scan with scanID
+app.get('/scans', async (req, res) => {
+    const { scan_id } = req.query;
+
+    if (!scan_id) {
+        return res.status(400).json({ error: "scan_id is required" });
+    }
+
+    try {
+        const response = await axios.get(`${process.env.API_URL}/scans/${scan_id}`, {
+            withCredentials: true,
+        });
+        res.json(response.data);
+    } catch (err) {
+        console.error("❌ Error when fetching Scan:", err.message || err);
+        if (err.response && err.response.status === 404) {
+            return res.status(404).json({ error: "Scan not found " });
+        }
+        res.status(500).json({ error: "Failed to fetch scan" });
     }
 });
 
