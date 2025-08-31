@@ -1,7 +1,6 @@
 // App.tsx - Remove Router wrapper
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from './Dashboard';
 import Home from './HomePage';
 import { useTheme } from './useTheme';
 import './ThemeSystem.css';

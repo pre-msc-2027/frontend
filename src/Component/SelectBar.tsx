@@ -262,11 +262,11 @@ export default function RepoBranchDropdown() {
                             {availableToAdd.length === 0 && <div>All repos are already added</div>}
                             {availableToAdd.map(repo => (
                                 <div key={repo.id} className="repo-choice">
-                                    <div className="repo-choice-content">
+                                    <div className="repo-choice-content" onClick={() => handleSelectRepo(repo)}>
                                         <div className="repo-choice-name">{repo.full_name}</div>
                                         {repo.description && <div className="repo-choice-description">{repo.description}</div>}
                                     </div>
-                                    <button onClick={() => handleSelectRepo(repo)}>Add</button>
+
                                 </div>
                             ))}
                         </div>

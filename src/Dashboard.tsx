@@ -101,9 +101,25 @@ export interface ScanResult {
 }
 
 
+
 const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const { theme } = useTheme();
     const [analyse, setAnalyse] = useState<ScanResult | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
+    const [isCreatingScan, setIsCreatingScan] = useState(false);
+
+    // Fetch logged-in user info
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+                setUsername(res.data.username);
+            } catch (err) {
+                console.error("❌ Failed to fetch user info:", err);
+            }
+        };
+        fetchUser();
+    }, []);
 
     // Get analyse
     const fetchScan = async () => {
@@ -121,19 +137,98 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
             console.error("Error fetching available scan:", err);
         }
     };
+
     useEffect(() => {
         if (scanId != null){
             fetchScan();
         }
     }, [scanId]);
+
+    const handleDownload = () => {
+        if (!analyse) return;
+
+        const json = JSON.stringify(analyse, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `analyse_${analyse.scan_id || "result"}.json`;
+        link.click();
+
+        URL.revokeObjectURL(url);
+    };
+
+    const handleCreateAnalyse = async () => {
+        if (!username || !analyse) {
+            alert("Please select a scan first or ensure you're logged in.");
+            return;
+        }
+
+        setIsCreatingScan(true);
+
+        try {
+            const response = await axios.post("http://localhost:8001/scans", {
+                project_name: analyse.project_name,
+                scanned_by: username,
+                scan_version: "1.0.0",
+                scan_options: {
+                    repo_url: analyse.scan_options.repo_url,
+                    branch_id: analyse.scan_options.branch_id
+                },
+                auth_context: {
+                    user_id: username,
+                    user_role: "user",
+                    session_id: "fake-session"
+                },
+                notes: "New analysis from Dashboard"
+            });
+
+            console.log("✅ Scan created:", response.data);
+
+            // Update the current analyse to the new one
+            setAnalyse(response.data);
+
+            // Update URL with new scan ID
+            const encodedScanId = btoa(response.data.scan_id);
+            window.history.pushState({}, '', `/dashboard?scan=${encodeURIComponent(encodedScanId)}`);
+
+            alert("New analysis created successfully!");
+
+        } catch (err) {
+            console.error("❌ Failed to create scan:", err);
+            alert("Failed to create analysis. Please try again.");
+        } finally {
+            setIsCreatingScan(false);
+        }
+    };
+
+    const getCurrentStage = (analyse: ScanResult | null): number => {
+        if (!analyse) return 1;
+        if (analyse.analysis.status === "pending" || analyse.analysis.status === "running") {
+            return 1;
+        }
+        if (analyse.analysis.status === "completed") {
+            return 2;
+        }
+        if (analyse.ai_comment && analyse.ai_comment.length > 0) {
+            return 3;
+        }
+
+        if (analyse.logs && analyse.logs.length > 0) {
+            return 4;
+        }
+        return 5;
+    };
+
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>
-            {/* Header with glassmorphism */}
+            {/* Header */}
             <div className=" flex-none flex flex-row justify-between items-center">
                 <RepoBranchDropdown />
                 <Navbar />
             </div>
-            {/* Main Content */}
+            {/* Main  */}
             <div className="dashboard-main basis-[80%] flex-grow overflow-hidden mt-4">
                 <div className="flex flex-col lg:flex-row gap-6 h-full">
                     {/* Left Side */}
@@ -146,18 +241,28 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                                 <div className="action-card flex-1">
                                     <h2 className="glass-title">Quick Actions</h2>
                                     <div className="grid grid-cols-2 gap-3 mt-4">
-                                        <button className="glass-card p-3 text-center hover:scale-105 transition-transform">
-
-                                            <p className="text-sm mt-2">Analyse</p>
+                                        <button
+                                            className={`glass-card p-3 text-center hover:scale-105 transition-transform ${
+                                                isCreatingScan ? 'opacity-50 cursor-not-allowed' : ''
+                                            }`}
+                                            onClick={handleCreateAnalyse}
+                                            disabled={isCreatingScan || !analyse}
+                                        >
+                                            <p className="text-sm mt-2">
+                                                {isCreatingScan ? 'Creating...' : 'New Analyse'}
+                                            </p>
                                         </button>
-                                        <button className="glass-card p-3 text-center hover:scale-105 transition-transform">
-
-                                            <p className="text-sm mt-2">Get to site</p>
+                                        <button
+                                            onClick={handleDownload}
+                                            className="glass-card p-3 text-center hover:scale-105 transition-transform"
+                                            disabled={!analyse}
+                                        >
+                                            <p className="text-sm mt-2">Download Analyse result</p>
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* Pie Chart Card */}
+                                {/* Pie Chart  */}
                                 <div className="pie-chart-card flex-[2]">
                                     <div className="flex-1 w-full overflow-hidden">
                                         <PieChart scanId={scanId} />
@@ -181,7 +286,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                         <div className="progress-card flex-[2] h-2/5 overflow-hidden">
                             <h2 className="glass-title">Development Progress</h2>
                             <div className="mt-4">
-                                <DevelopmentProgress currentStage={3} />
+                                <DevelopmentProgress currentStage={getCurrentStage(analyse)} />
                             </div>
                         </div>
                     </div>
@@ -192,8 +297,6 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                         <div className="flex-1 overflow-hidden">
                             <LogsDashboard logs={analyse?.logs}/>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -202,4 +305,3 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
 };
 
 export default Dashboard;
-
