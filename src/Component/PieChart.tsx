@@ -92,10 +92,10 @@ const PieChart: React.FC<PiechartProp> = ({scanId}) => {
         const data: number[] = [];
         const backgroundColors = ['#547fff', '#df4cd9', '#ffb272', '#2dd4bf', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
 
-        rules.forEach((rule, index) => {
+        rules.forEach((rule) => {
             const occurrences = ruleOccurrences.get(rule.rule_id.toString()) || 0;
 
-            if (occurrences > 0) { // Ne montrer que les règles qui ont des occurrences
+            if (occurrences > 0) {
                 labels.push(rule.name);
                 data.push(occurrences);
             }
