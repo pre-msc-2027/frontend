@@ -1,120 +1,72 @@
-import React, { useState, useMemo } from "react";
+import React, {useState, useMemo, useEffect} from "react";
 import { Search } from "lucide-react";
 import "./RulesCard.css";
+import axios from "axios";
 
-interface Rule {
-    id: number;
-    name: string;
-    description: string;
-    severity: 'critical' | 'high' | 'medium' | 'low';
-    enabled: boolean;
+interface RuleParameterOptions {
+    low?: number;
+    medium?: number;
+    high?: number;
+    [key: string]: any;
 }
 
-const mockRules: Rule[] = [
-    {
-        id: 1,
-        name: "SQL Injection Detection",
-        description: "Detects potential SQL injection vulnerabilities",
-        severity: 'critical',
-        enabled: true
-    },
-    {
-        id: 2,
-        name: "XSS Prevention",
-        description: "Prevents cross-site scripting attacks",
-        severity: 'high',
-        enabled: true
-    },
-    {
-        id: 3,
-        name: "Unused Variables",
-        description: "Identifies unused variables in code",
-        severity: 'medium',
-        enabled: false
-    },
-    {
-        id: 4,
-        name: "Performance Bottlenecks",
-        description: "Detects potential performance issues",
-        severity: 'high',
-        enabled: true
-    },
-    {
-        id: 5,
-        name: "CSRF Protection",
-        description: "Validates CSRF token implementation",
-        severity: 'high',
-        enabled: true
-    },
-    {
-        id: 6,
-        name: "Memory Leaks",
-        description: "Identifies potential memory leak patterns",
-        severity: 'medium',
-        enabled: false
-    },
-    {
-        id: 7,
-        name: "Accessibility Standards",
-        description: "Ensures WCAG compliance",
-        severity: 'medium',
-        enabled: true
-    },
-    {
-        id: 8,
-        name: "API Rate Limiting",
-        description: "Checks for proper rate limiting implementation",
-        severity: 'high',
-        enabled: false
-    },
-    {
-        id: 9,
-        name: "Code Complexity",
-        description: "Measures cyclomatic complexity",
-        severity: 'low',
-        enabled: true
-    },
-    {
-        id: 10,
-        name: "Insecure Dependencies",
-        description: "Scans for vulnerable dependencies",
-        severity: 'critical',
-        enabled: true
-    },
-    {
-        id: 11,
-        name: "Dead Code Elimination",
-        description: "Identifies unreachable code blocks",
-        severity: 'low',
-        enabled: false
-    },
-    {
-        id: 12,
-        name: "SEO Best Practices",
-        description: "Validates SEO optimization rules",
-        severity: 'medium',
-        enabled: true
-    },
-];
+interface RuleParameter {
+    type: string;
+    name: string;
+    default: string | number | boolean;
+    description: string;
+    options?: RuleParameterOptions;
+}
+
+interface Rule {
+    rule_id: string;
+    name: string;
+    description: string;
+    tags: string[];
+    parameters: RuleParameter[];
+}
 
 const RulesCard: React.FC = () => {
-    const [selectedRules, setSelectedRules] = useState<number[]>([]);
+    const [rules, setRules] = useState<Rule[]>([]);
+    const [selectedRules, setSelectedRules] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await axios.get<Rule[]>(`http://localhost:8001/rules/`, {
+                    withCredentials: true,
+                });
+
+                setRules(response.data);
+            } catch (err) {
+                setError("Erreur lors du chargement des règles");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRules();
+    }, []);
 
     const filteredRules = useMemo(() => {
-        return mockRules.filter(rule => {
+        return rules.filter(rule => {
             const matchesSearch = rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 rule.description.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesSearch;
         });
-    }, [searchTerm]);
+    }, [rules, searchTerm]);
 
-    const handleRuleToggle = (id: number) => {
+    const handleRuleToggle = (ruleId: string) => {
         setSelectedRules(prev =>
-            prev.includes(id) ? prev.filter(ruleId => ruleId !== id) : [...prev, id]
+            prev.includes(ruleId) ? prev.filter(id => id !== ruleId) : [...prev, ruleId]
         );
     };
-
 
     const getSeverityColor = (severity: string) => {
         const colors = {
@@ -125,7 +77,6 @@ const RulesCard: React.FC = () => {
         };
         return colors[severity as keyof typeof colors] || colors.low;
     };
-
     return (
         <div className="h-full flex flex-col">
             {/* Search Bar */}
@@ -140,9 +91,6 @@ const RulesCard: React.FC = () => {
                 />
             </div>
 
-            {/* Select All Button */}
-
-
             {/* Rules List */}
             <div className="rules-list">
                 {filteredRules.length === 0 ? (
@@ -150,35 +98,37 @@ const RulesCard: React.FC = () => {
                         <p>No rules found</p>
                     </div>
                 ) : (
-                    filteredRules.map((rule, index) => (
-                        <button
-                            key={rule.id}
-                            className={`rule-item ${selectedRules.includes(rule.id) ? 'selected' : ''} ${!rule.enabled ? 'disabled' : ''}`}
-                            onClick={() => handleRuleToggle(rule.id)}
-                            style={{ '--animation-delay': `${index * 0.05}s` } as React.CSSProperties}
-                        >
-                            <div className="rule-checkbox">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedRules.includes(rule.id)}
-                                    onChange={() => handleRuleToggle(rule.id)}
-                                    className="checkbox-input"
-                                />
-                            </div>
+                    filteredRules.map((rule, index) => {
+                        const severity = rule.parameters.find(p => p.name === 'severity')?.default || 'medium';
+                        return (
+                            <button
+                                key={rule.rule_id}
+                                className={`rule-item ${selectedRules.includes(rule.rule_id) ? 'selected' : ''}`}
+                                onClick={() => handleRuleToggle(rule.rule_id)}
+                                style={{ '--animation-delay': `${index * 0.05}s` } as React.CSSProperties}
+                            >
+                                <div className="rule-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedRules.includes(rule.rule_id)}
+                                        onChange={() => handleRuleToggle(rule.rule_id)}
+                                        className="checkbox-input"
+                                    />
+                                </div>
 
-                            <div className="rule-info">
-                                <div className="rule-header">
-                                    <h4 className="rule-name">{rule.name}</h4>
-                                    <div className="rule-badges">
-                                        <span className={`severity-badge ${rule.severity} ${getSeverityColor(rule.severity)}`}>
-                                            {rule.severity}
-                                        </span>
-
+                                <div className="rule-info">
+                                    <div className="rule-header">
+                                        <h4 className="rule-name">{rule.name}</h4>
+                                        <div className="rule-badges">
+                                            <span className={`severity-badge ${severity} ${getSeverityColor(severity as string)}`}>
+                                                {severity}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </button>
-                    ))
+                            </button>
+                        );
+                    })
                 )}
             </div>
         </div>
