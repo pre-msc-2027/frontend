@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./SelectBar.css";
@@ -49,6 +48,28 @@ export default function RepoBranchDropdown() {
         fetchUser();
     }, []);
 
+    // Fetch user analyses
+    const fetchUserAnalyses = async (currentUsername: string) => {
+        try {
+            const scansRes = await axios.get(`http://localhost:8001/scans/summary/${currentUsername}`);
+            const analyses: AnalysisData[] = [];
+            scansRes.data.forEach((r: any) => {
+                r.analyses.forEach((a: any) => {
+                    analyses.push({
+                        scan_id: a.scan_id,
+                        project_name: a.project_name,
+                        branch_id: a.branch_id,
+                        repo_url: r.repo_url,
+                        date: new Date(parseInt(a.scan_id)).toLocaleDateString(),
+                    });
+                });
+            });
+            setUserAnalyses(analyses);
+        } catch (err) {
+            console.error("❌ Failed to fetch analyses:", err);
+        }
+    };
+
     // Fetch repos and analyses after username is available
     useEffect(() => {
         if (!username) return;
@@ -65,20 +86,7 @@ export default function RepoBranchDropdown() {
                 setAddedRepos(repos);
 
                 // User scans/analyses
-                const scansRes = await axios.get(`http://localhost:8001/scans/summary/${username}`);
-                const analyses: AnalysisData[] = [];
-                scansRes.data.forEach((r: any) => {
-                    r.analyses.forEach((a: any) => {
-                        analyses.push({
-                            scan_id: a.scan_id,
-                            project_name: a.project_name,
-                            branch_id: a.branch_id,
-                            repo_url: r.repo_url,
-                            date: new Date(parseInt(a.scan_id)).toLocaleDateString(),
-                        });
-                    });
-                });
-                setUserAnalyses(analyses);
+                await fetchUserAnalyses(username);
 
                 // Available GitHub repos
                 const ghRes = await axios.get(`${import.meta.env.VITE_API_URL}/auth/repos`, { withCredentials: true });
@@ -138,15 +146,16 @@ export default function RepoBranchDropdown() {
             else console.error("❌ Failed to save repo:", err);
         }
     };
+
     const handleCreateScan = async (repo: RepoData, branch: string) => {
-        const userInfo = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
-        const username = userInfo.data.username;
+        if (!username) return;
+
         try {
-            console.log(username)
+            console.log(username);
             const response = await axios.post("http://localhost:8001/scans", {
-                project_name: repo.repo,         // "T-DOP-601-Popeye"
-                scanned_by: username,            // e.g. "arthur-bartczak"
-                scan_version: "1.0.0",           // or just "latest"
+                project_name: repo.repo,
+                scanned_by: username,
+                scan_version: "1.0.0",
                 scan_options: {
                     repo_url: repo.repo_url,
                     branch_id: branch
@@ -161,8 +170,8 @@ export default function RepoBranchDropdown() {
 
             console.log("✅ Scan created:", response.data);
 
-            // Refresh the data after creating scan
-            await fetchUserRepos(); // or fetchReposAndScans() if that function exists and works
+            // Refresh the analyses data after creating scan
+            await fetchUserAnalyses(username);
 
             // Optionally show success message
             alert("Scan created successfully!");
@@ -172,28 +181,8 @@ export default function RepoBranchDropdown() {
             alert("Failed to create scan. Please try again.");
         }
     };
-    async function fetchUserRepos() {
-        try {
-            const userInfo = await fetch("/auth/userinfo").then(res => res.json());
-            console.log(userInfo);
-            const response = await axios.get(`http://localhost:8001/repositories/user/${userInfo.username}`);
-            const repos = response.data;
 
-            console.log("📂 Saved repos from backend:", repos);
 
-            // Update the dropdown list (addedRepos)
-            const formattedRepos: RepoData[] = repos.map((r) => ({
-                repo: r.name,
-                repo_url: r.repo_url,
-                branches: r.branches || []
-            }));
-
-            setAddedRepos(formattedRepos);
-
-        } catch (err) {
-            console.error("❌ Error fetching saved repos:", err);
-        }
-    }
 
     const availableToAdd = availableRepos.filter(r => !addedRepos.some(ar => ar.repo_url === r.html_url));
 
@@ -227,28 +216,27 @@ export default function RepoBranchDropdown() {
                                                 <div key={branch} className="branch-group">
                                                     <div className={`branch-name ${isExpanded ? "expanded" : ""}`} onClick={() => handleBranchClick(repo, branch)}>
                                                         {branch} <span className="branch-info">
-                              {analyses.length === 0 && " (No analyses)"}
+                                                            {analyses.length === 0 && " (No analyses)"}
                                                         {analyses.length === 1 && " (1 analysis)"}
                                                         {analyses.length > 1 && ` (${analyses.length} analyses)`}
-                            </span>
+                                                        </span>
                                                         <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>
                                                     </div>
                                                     {isExpanded && (
                                                         <div className="analysis-list">
-                                                            {analyses.length === 0 ? (
-                                                                <div
-                                                                    className="analysis-item create-new"
-                                                                    onClick={() => handleCreateScan(repo, branch)}
-                                                                >
-                                                                    Create new analysis
+                                                            {/* Always show create new analysis button */}
+                                                            <div
+                                                                className="analysis-item create-new"
+                                                                onClick={() => handleCreateScan(repo, branch)}
+                                                            >
+                                                                Create new analysis
+                                                            </div>
+                                                            {/* Show existing analyses */}
+                                                            {analyses.map(a => (
+                                                                <div key={a.scan_id} className="analysis-item" onClick={() => handleAnalysisSelect(a.scan_id)}>
+                                                                    {a.project_name} <span className="analysis-date">({formatScanDate(a.scan_id)})</span>
                                                                 </div>
-                                                            ) : (
-                                                                analyses.map(a => (
-                                                                    <div key={a.scan_id} className="analysis-item" onClick={() => handleAnalysisSelect(a.scan_id)}>
-                                                                        {a.project_name} <span className="analysis-date">({formatScanDate(a.scan_id)})</span>
-                                                                    </div>
-                                                                ))
-                                                            )}
+                                                            ))}
                                                         </div>
                                                     )}
                                                 </div>
