@@ -101,7 +101,7 @@ export interface ScanResult {
     logs?: Log[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
+const Dashboard: React.FC<DashboardProps> = ({ key }) => {
     const { theme } = useTheme();
 
     // Get analyse
@@ -111,7 +111,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                 `${import.meta.env.VITE_API_URL}/scans`,
                 {
                     withCredentials: true,
-                    params: { scan_id: scanId }
+                    params: { scan_id: key }
                 }
             );
             console.log(response.data);
@@ -120,10 +120,10 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
         }
     }
     useEffect(() => {
-        if (scanId != null){
+        if (key != null){
             fetchScan();
         }
-    }, [scanId]);
+    }, [key]);
 
 
 

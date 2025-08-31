@@ -37,9 +37,8 @@ const RulesCard: React.FC = () => {
                 severity: rule.severity || "low",
                 enabled: rule.enabled ?? true
             }));
-
             setRules(rulesWithDefaults);
-            console.log("✅ Rules fetched:", rulesWithDefaults);
+
         } catch (err) {
             console.error("❌ Error fetching rules:", err);
             alert("Failed to fetch rules from the API");

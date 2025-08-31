@@ -7,8 +7,8 @@ const DashboardWrapper: React.FC = () => {
 
     const encodedScan = searchParams.get("scan");
     const scan = encodedScan ? atob(encodedScan) : null;
-
-    return <Dashboard scanId={scan} />;
+    console.log("Scan", scan);
+    return <Dashboard key={scan} />;
 };
 
 export default DashboardWrapper;

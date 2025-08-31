@@ -77,7 +77,7 @@ export default function RepoBranchDropdown() {
     };
 
 
-    const handleBranchSelect = (repoUrl: string, branchName: string, scan_id: string) => {
+    const handleBranchSelect = (scan_id: string) => {
         const encodedScanId = btoa(scan_id);
 
         navigate(`/dashboard?scan=${encodeURIComponent(encodedScanId)}`);
@@ -163,7 +163,7 @@ export default function RepoBranchDropdown() {
                                                                 {analyses.length === 0 ? (
                                                                     <div
                                                                         className="analysis-item create-new"
-                                                                        onClick={() => handleBranchSelect(repo.repo_url, branchName)}
+                                                                        onClick={() => handleBranchSelect(a.scan_id)}
                                                                     >
                                                                         Create new analysis
                                                                     </div>
@@ -172,7 +172,7 @@ export default function RepoBranchDropdown() {
                                                                         <div
                                                                             key={a.scan_id}
                                                                             className="analysis-item"
-                                                                            onClick={() => handleBranchSelect(repo.repo_url, branchName, a.scan_id )}
+                                                                            onClick={() => handleBranchSelect(a.scan_id )}
                                                                         >
                                                                             <p className="text-purple-500">Go to the Analyse</p>
                                                                         </div>
