@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./SelectBar.css";
+import {useNavigate} from "react-router-dom";
 
 interface RepoData {
     repo: string;
@@ -28,6 +29,7 @@ interface UserRepo {
 }
 
 export default function RepoBranchDropdown() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
     const [addedRepos, setAddedRepos] = useState<RepoData[]>([]);
     const [availableRepos, setAvailableRepos] = useState<UserRepo[]>([]);
@@ -110,7 +112,8 @@ export default function RepoBranchDropdown() {
     };
 
     const handleAnalysisSelect = (scanId: string) => {
-        alert(`Navigate to: /analysis/${scanId}`);
+        const encodedScanId = btoa(scanId);
+        navigate(`/dashboard?scan=${encodeURIComponent(encodedScanId)}`);
     };
 
     const handleAddRepo = () => setShowModal(true);
