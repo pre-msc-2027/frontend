@@ -78,10 +78,9 @@ export default function RepoBranchDropdown() {
 
 
     const handleBranchSelect = (repoUrl: string, branchName: string, scan_id: string) => {
-        navigate(
-            `/dashboard?repo=${encodeURIComponent(repoUrl)}&branch=${encodeURIComponent(branchName)}&scan=${encodeURIComponent(scan_id)}`
+        const encodedScanId = btoa(scan_id);
 
-        );
+        navigate(`/dashboard?scan=${encodeURIComponent(encodedScanId)}`);
     };
 
 
