@@ -42,7 +42,6 @@ const RulesCard: React.FC = () => {
                 const response = await axios.get<Rule[]>(`http://localhost:8001/rules/`, {
                     withCredentials: true,
                 });
-
                 setRules(response.data);
             } catch (err) {
                 setError("Erreur lors du chargement des règles");

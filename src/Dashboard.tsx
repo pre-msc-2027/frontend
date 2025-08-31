@@ -8,7 +8,11 @@ import DevelopmentProgress from "./Component/DeveloppementProgress.tsx";
 import { useTheme } from "./useTheme";
 import "./Dashboard.css";
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+    scanId: string | null;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ key }) => {
     const { theme } = useTheme();
 
     return (
