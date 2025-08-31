@@ -143,7 +143,7 @@ app.get('/rules', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch rules" });
     }
 });
-//Get Summary for my User
+//GET Summary for my User
 app.get('/scans/summary', async (req, res) => {
     const username = req.session.username;
     if (!username) {
@@ -162,3 +162,4 @@ app.get('/scans/summary', async (req, res) => {
         res.status(500).json({ error: "Failed to fetch added Repo" });
     }
 });
+

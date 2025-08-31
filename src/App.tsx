@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import Home from './HomePage';
 import { useTheme } from './useTheme';
 import './ThemeSystem.css';
+import DashboardWrapper from "./DashboardWrapper.tsx";
 
 const App: React.FC = () => {
     const { theme } = useTheme();
@@ -19,7 +20,7 @@ const App: React.FC = () => {
         <div className={`app-wrapper theme-${theme}`}>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<DashboardWrapper />} />
             </Routes>
         </div>
     );
