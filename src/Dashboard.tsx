@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import PieChart from "./Component/PieChart.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
 import RepoBranchDropdown from "./Component/SelectBar.tsx";
@@ -13,12 +13,119 @@ interface DashboardProps {
     scanId: string | null;
     key: string | null;
 }
+interface ScanOptions {
+    repo_url: string;
+    use_ai_assistance: boolean;
+    max_depth: number;
+    follow_symlinks: boolean;
+    target_type: string;
+    target_files: string[];
+    severity_min: "low" | "medium" | "high" | string;
+    branch_id: string;
+    commit_hash: string;
+}
+
+interface AuthContext {
+    user_id: string;
+    user_role: string;
+    session_id: string;
+}
+
+interface Vulnerability {
+    file: string;
+    line: number;
+    type: string;
+    severity: "low" | "medium" | "high" | "critical" | string;
+    description: string;
+    recommendation: string;
+}
+
+interface Warning {
+    file: string;
+    line: number;
+    rule_id: number;
+    id: number;
+}
+
+interface AnalysisSummary {
+    total_files: number;
+    files_with_vulnerabilities: number;
+    vulnerabilities_found: number;
+}
+
+interface Analysis {
+    status: string;
+    summary: AnalysisSummary;
+    vulnerabilities: Vulnerability[];
+    warnings: Warning[];
+}
+
+interface AIComment {
+    warning_id: number;
+    original: string;
+    fixed: string;
+}
+
+interface DependencyVulnerability {
+    cve_id: string;
+    severity: "low" | "medium" | "high" | "critical" | string;
+    description: string;
+    recommendation: string;
+}
+
+interface Dependency {
+    name: string;
+    version: string;
+    vulnerability?: DependencyVulnerability;
+}
+
+interface Log {
+    timestamp: number;
+    message: string;
+    error?: string | null;
+}
+
+export interface ScanResult {
+    scan_id: string;
+    timestamp: string; // ISO string
+    project_name: string;
+    scanned_by: string;
+    scan_version: string;
+    scan_options: ScanOptions;
+    auth_context: AuthContext;
+    notes?: string;
+    analysis: Analysis;
+    ai_comment?: AIComment[];
+    dependencies?: Dependency[];
+    logs?: Log[];
+}
 
 
 const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
     const { theme } = useTheme();
+    const [analyse, setAnalyse] = useState<ScanResult | null>(null);
 
+    // Get analyse
+    const fetchScan = async () => {
+        try {
+            const response = await axios.get<ScanResult>(
+                `http://localhost:8001/scans/${scanId}`,
+                {
+                    withCredentials: true,
+                }
+            );
 
+            setAnalyse(response.data);
+
+        } catch (err) {
+            console.error("Error fetching available scan:", err);
+        }
+    };
+    useEffect(() => {
+        if (scanId != null){
+            fetchScan();
+        }
+    }, [scanId]);
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>
             {/* Header with glassmorphism */}
@@ -83,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
                     <div className="w-full lg:w-2/5 logs-card flex flex-col overflow-hidden">
                         <h2 className="glass-title">System Logs</h2>
                         <div className="flex-1 overflow-hidden">
-                            <LogsDashboard />
+                            <LogsDashboard logs={analyse?.logs}/>
                         </div>
 
 
