@@ -178,13 +178,13 @@ export default function RepoBranchDropdown() {
 
             // Optionally show success message
             alert("Scan created successfully!");
+            handleAnalysisSelect(response.data.scan_id);
 
         } catch (err) {
             console.error("❌ Failed to create scan:", err);
             alert("Failed to create scan. Please try again.");
         }
     };
-
 
 
     const availableToAdd = availableRepos.filter(r => !addedRepos.some(ar => ar.repo_url === r.html_url));
