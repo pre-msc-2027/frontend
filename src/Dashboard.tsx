@@ -160,7 +160,7 @@ const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
                                 {/* Pie Chart Card */}
                                 <div className="pie-chart-card flex-[2]">
                                     <div className="flex-1 w-full overflow-hidden">
-                                        <PieChart />
+                                        <PieChart scanId={scanId} />
                                     </div>
                                     <div className="pt-4 w-full text-center">
                                         <h2 className="glass-subtitle">Analysis Overview</h2>
