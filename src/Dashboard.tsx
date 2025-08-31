@@ -10,8 +10,8 @@ import "./Dashboard.css";
 import axios from "axios";
 
 interface DashboardProps {
-    scanId: string | null;
-    key: string | null;
+    scanId: string ;
+    key: string;
 }
 interface ScanOptions {
     repo_url: string;
@@ -82,7 +82,7 @@ interface Dependency {
 interface Log {
     timestamp: number;
     message: string;
-    error?: string | null;
+    error?:  number | null;
 }
 
 export interface ScanResult {
@@ -101,7 +101,7 @@ export interface ScanResult {
 }
 
 
-const Dashboard: React.FC<DashboardProps> = ({ key, scanId }) => {
+const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const { theme } = useTheme();
     const [analyse, setAnalyse] = useState<ScanResult | null>(null);
 

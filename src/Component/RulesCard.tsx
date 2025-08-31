@@ -30,23 +30,16 @@ const RulesCard: React.FC = () => {
     const [rules, setRules] = useState<Rule[]>([]);
     const [selectedRules, setSelectedRules] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchRules = async () => {
-            setLoading(true);
-            setError(null);
-
             try {
                 const response = await axios.get<Rule[]>(`http://localhost:8001/rules/`, {
                     withCredentials: true,
                 });
                 setRules(response.data);
             } catch (err) {
-                setError("Erreur lors du chargement des règles");
-            } finally {
-                setLoading(false);
+                console.error(err);
             }
         };
 
