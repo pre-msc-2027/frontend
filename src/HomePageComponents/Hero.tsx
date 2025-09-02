@@ -55,9 +55,9 @@ export const Hero: React.FC = () => {
 
 
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+      <div className="relative max-w-6xl mx-auto p-2 md:px-6 lg:px-8 py-20 text-center">
         <motion.h1
-            className="text-7xl sm:text-8xl lg:text-9xl font-bold text-text mb-8 tracking-tight leading-none"
+            className="text-6xl md:text-7xl lg:text-8xl font-bold text-text mb-8 tracking-tight leading-none"
           variants={itemVariants}
         >
           Uncover your repository
@@ -69,7 +69,7 @@ export const Hero: React.FC = () => {
         </motion.h1>
 
         <motion.p
-          className="text-3xl text-text mb-16 max-w-3xl mx-auto leading-relaxed font-medium"
+          className="text-xl md:text-2xl lg:text-3xl text-text mb-16 max-w-3xl mx-auto leading-relaxed font-medium"
           variants={itemVariants}
         >
           A powerful tool that analyzes GitHub repositories to extract key insights, trends, and metrics.
