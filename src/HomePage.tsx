@@ -1,5 +1,4 @@
 import React from 'react';
-import './HomePage.css';
 import { Header } from './HomePageComponents/Header.tsx';
 import ProcessingSteps from './HomePageComponents/ProcessingSteps.tsx';
 import { Features } from './HomePageComponents/Features.tsx';

@@ -69,7 +69,7 @@ interface DevelopmentProgressProps {
     currentStage: number;
 }
 
-export default function DevelopmentProgress({ currentStage }: DevelopmentProgressProps) {
+export default function DevelopmentProgress({ currentStage }: Readonly<DevelopmentProgressProps>) {
     const getStageStatus = (stageId: number) => {
         if (currentStage > stageId) return 'completed';
         if (currentStage === stageId) return 'active';

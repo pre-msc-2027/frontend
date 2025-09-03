@@ -1,2 +1,5 @@
-GET http://localhost:8001/scans/summary/Watywombat
+GET http://92.88.243.85:8001/rules/
+
+
+/scans/summary/Watywombat
 

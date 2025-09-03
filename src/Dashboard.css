@@ -53,6 +53,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    animation: cardSlideIn 0.6s ease-out;
 }
 
 .glass-card::before {
@@ -72,6 +73,7 @@
             var(--glass-shadow-hover),
             inset 0 1px 0 rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
+    animation: float 2s ease-in-out infinite;
 }
 
 /* Action Card */
@@ -312,9 +314,6 @@
     }
 }
 
-.glass-card {
-    animation: cardSlideIn 0.6s ease-out;
-}
 
 .glass-card:nth-child(1) { animation-delay: 0.1s; }
 .glass-card:nth-child(2) { animation-delay: 0.2s; }
@@ -327,9 +326,7 @@
     50% { transform: translateY(-2px); }
 }
 
-.glass-card:hover {
-    animation: float 2s ease-in-out infinite;
-}
+
 
 /* ===== THEME TRANSITION ANIMATIONS ===== */
 * {
