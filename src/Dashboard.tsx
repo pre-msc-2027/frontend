@@ -205,7 +205,26 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
         }
     };
 
-    const getCurrentStage = 2
+    const getCurrentStage = (analyse: ScanResult | null): number => {
+        if (!analyse || !analyse.analysis) return 1;
+
+        const status = analyse.analysis.status;
+
+        if (status === "pending" || status === "running") {
+            return 1;
+        }
+        if (status === "completed") {
+            return 2;
+        }
+        if (analyse.ai_comment && analyse.ai_comment.length > 0) {
+            return 3;
+        }
+        if (analyse.logs && analyse.logs.length > 0) {
+            return 4;
+        }
+        return 5;
+    };
+
 
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>
@@ -272,7 +291,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                         <div className="progress-card flex-[2] h-2/5 overflow-hidden">
                             <h2 className="glass-title">Development Progress</h2>
                             <div className="mt-4">
-                                <DevelopmentProgress currentStage={getCurrentStage} />
+                                <DevelopmentProgress currentStage={getCurrentStage(analyse)} />
                             </div>
                         </div>
                     </div>
