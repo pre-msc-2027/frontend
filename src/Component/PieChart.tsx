@@ -80,6 +80,8 @@ const PieChart: React.FC<PiechartProp> = ({scanId}) => {
 
         const { analysis, rules } = analysisData;
 
+        if (!analysis.warnings) return null;
+
 
         const ruleOccurrences = new Map<string, number>();
 
