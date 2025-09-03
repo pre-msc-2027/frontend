@@ -107,12 +107,14 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const [analyse, setAnalyse] = useState<ScanResult | null>(null);
     const [username, setUsername] = useState<string | null>(null);
     const [isCreatingScan, setIsCreatingScan] = useState(false);
+    const baseapiUrl = import.meta.env.VITE_API_URL_BACK
+    const baseurl= import.meta.env.VITE_API_URL
 
     // Fetch logged-in user info
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/auth/userinfo", { withCredentials: true });
+                const res = await axios.get(`${baseurl}/auth/userinfo`, { withCredentials: true });
                 setUsername(res.data.username);
             } catch (err) {
                 console.error("❌ Failed to fetch user info:", err);
@@ -125,7 +127,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const fetchScan = async () => {
         try {
             const response = await axios.get<ScanResult>(
-                `http://localhost:8001/scans/${scanId}`,
+                `${baseapiUrl}/scans/${scanId}`,
                 {
                     withCredentials: true,
                 }
@@ -168,7 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
         setIsCreatingScan(true);
 
         try {
-            const response = await axios.post("http://localhost:8001/scans", {
+            const response = await axios.post(`${baseapiUrl}/scans`, {
                 project_name: analyse.project_name,
                 scanned_by: username,
                 scan_version: "1.0.0",
@@ -204,22 +206,25 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     };
 
     const getCurrentStage = (analyse: ScanResult | null): number => {
-        if (!analyse) return 1;
-        if (analyse.analysis.status === "pending" || analyse.analysis.status === "running") {
+        if (!analyse || !analyse.analysis) return 1;
+
+        const status = analyse.analysis.status;
+
+        if (status === "pending" || status === "running") {
             return 1;
         }
-        if (analyse.analysis.status === "completed") {
+        if (status === "completed") {
             return 2;
         }
         if (analyse.ai_comment && analyse.ai_comment.length > 0) {
             return 3;
         }
-
         if (analyse.logs && analyse.logs.length > 0) {
             return 4;
         }
         return 5;
     };
+
 
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>

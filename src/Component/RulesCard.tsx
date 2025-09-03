@@ -31,10 +31,12 @@ const RulesCard: React.FC = () => {
     const [selectedRules, setSelectedRules] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const baseapiUrl = import.meta.env.VITE_API_URL_BACK
+
     useEffect(() => {
         const fetchRules = async () => {
             try {
-                const response = await axios.get<Rule[]>(`http://localhost:8001/rules/`, {
+                const response = await axios.get<Rule[]>(`${baseapiUrl}/rules/`, {
                     withCredentials: true,
                 });
                 setRules(response.data);
@@ -47,8 +49,10 @@ const RulesCard: React.FC = () => {
     }, []);
 
     const filteredRules = useMemo(() => {
+        if (!Array.isArray(rules)) return [];
         return rules.filter(rule => {
-            const matchesSearch = rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            const matchesSearch =
+                rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 rule.description.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesSearch;
         });

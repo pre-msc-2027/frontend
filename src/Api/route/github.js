@@ -41,7 +41,7 @@ router.get('/callback', async (req, res) => {
         const accessToken = tokenData.access_token;
         req.session.accessToken = accessToken;
 
-        res.redirect('http://localhost:5173/dashboard'); // redirect to dashboard
+        res.redirect(`${process.env.FRONTEND_URL}/dashboard`); // redirect to dashboard
     } catch (error) {
         res.status(500).send(`Erreur serveur: ${error.message}`);
     }
