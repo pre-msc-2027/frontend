@@ -55,11 +55,12 @@ interface PiechartProp{
 const PieChart: React.FC<PiechartProp> = ({scanId}) => {
     const [analysisData, setAnalysisData] = useState<AnalysisWithRules | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const baseapiUrl = import.meta.env.VITE_API_URL_BACK
 
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:8001/scans/analyse_with_rules/${scanId}`);
+            const response = await axios.get(`${baseapiUrl}/scans/analyse_with_rules/${scanId}`);
             const data: AnalysisWithRules = response.data;
             setAnalysisData(data);
         } catch (err) {
