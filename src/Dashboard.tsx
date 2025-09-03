@@ -11,7 +11,6 @@ import axios from "axios";
 
 interface DashboardProps {
     scanId: string ;
-    key: string;
 }
 interface ScanOptions {
     repo_url: string;
@@ -20,7 +19,7 @@ interface ScanOptions {
     follow_symlinks: boolean;
     target_type: string;
     target_files: string[];
-    severity_min: "low" | "medium" | "high" | string;
+    severity_min: string;
     branch_id: string;
     commit_hash: string;
 }
@@ -35,7 +34,7 @@ interface Vulnerability {
     file: string;
     line: number;
     type: string;
-    severity: "low" | "medium" | "high" | "critical" | string;
+    severity: string;
     description: string;
     recommendation: string;
 }
