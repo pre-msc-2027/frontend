@@ -193,10 +193,10 @@ export default function RepoBranchDropdown() {
 
     return (
         <div className="dropdown-container">
-            <div className="search-area">
+            <div className="search-area flex flex-row md:flex-col lg:flex-row">
                 <input
                     type="text"
-                    className="search-bar"
+                    className="search-bar sm:w-full md:w-3/5"
                     placeholder="Select repository, branch, and analysis..."
                     readOnly
                 />
@@ -251,7 +251,7 @@ export default function RepoBranchDropdown() {
                         ))
                     )}
                 </div>
-                <button className="add-repo-button" onClick={handleAddRepo}>+ Add Repo</button>
+                <button className="add-repo-button p-4 w-fit" onClick={handleAddRepo}>+ Add Repo</button>
             </div>
 
             {showModal && (
