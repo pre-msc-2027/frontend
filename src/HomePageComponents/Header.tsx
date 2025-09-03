@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Code2, Menu, X, Github } from 'lucide-react';
+import { Code2 } from 'lucide-react';
 import Navbar from "../Component/NavBar.tsx";
 
 export const Header: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
