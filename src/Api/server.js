@@ -9,7 +9,7 @@ console.log('CLIENT_ID:', process.env.CLIENT_ID);
 console.log('REDIRECT_URI:', process.env.REDIRECT_URI);
 // --- Middleware ---
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // frontend URL from env
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true
 }));
 app.use(express.json());
@@ -17,11 +17,8 @@ app.use(session({
     secret: 'my-secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // set true only if HTTPS
+    cookie: { secure: false }
 }));
-
-// --- Routes ---
-// 1. Redirect to GitHub for OAuth login
 app.get('/auth/github', (req, res) => {
     const state = Math.random().toString(36).substring(7);
     req.session.oauth_state = state;
