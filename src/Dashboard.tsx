@@ -229,9 +229,14 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     return (
         <div className={`dashboard-container lg:h-screen flex flex-col overflow-hidden  gap-4 theme-${theme}`}>
             {/* Header */}
-            <div className=" flex-none flex flex-row justify-between items-center">
-                <RepoBranchDropdown />
-                <Navbar />
+            <div className=" flex-none flex flex-row justify-between items-center p-4">
+                <div className="w-full md:w-3/4">
+                    <RepoBranchDropdown />
+                </div>
+                <div className="md:w-fit">
+                    <Navbar />
+                </div>
+
             </div>
             {/* Main  */}
             <div className="dashboard-main basis-[80%] flex-grow overflow-hidden mt-4">

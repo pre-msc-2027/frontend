@@ -1,7 +1,6 @@
 .dropdown-container {
     position: relative;
     justify-content: center;
-    width: 80%;
     font-family: sans-serif;
     height: 50px;
 }
@@ -9,12 +8,10 @@
 /* Search bar styling with enhanced glassmorphism */
 .search-bar {
     color: var(--color-text);
-    width: 80%;
     height: 50px;
     cursor: pointer;
     align-items: center;
     padding: 0.5rem;
-    margin: 0.5rem;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 45px;
@@ -421,7 +418,6 @@
 
 .add-repo-button {
     margin-left: 1rem;
-    padding: 0.5rem 1.5rem;
     border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.1);
