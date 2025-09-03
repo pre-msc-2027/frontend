@@ -22,51 +22,64 @@ interface DeploymentStepsProps {
   isAnalyzing?: boolean;
 }
 
-export const DeploymentSteps: React.FC<DeploymentStepsProps> = ({ 
-  currentStep = 'initialize', 
-  isAnalyzing = false 
-}) => {
-  const steps: Step[] = [
-    {
-      id: 'initialize',
-      title: 'Initialize',
-      description: 'Repository connection',
-      icon: GitBranch,
-      status: currentStep === 'initialize' ? (isAnalyzing ? 'active' : 'pending') : 
-             ['analyze', 'build', 'deploy', 'complete'].includes(currentStep) ? 'completed' : 'pending'
-    },
-    {
-      id: 'analyze',
-      title: 'Analyze',
-      description: 'Code & dependencies',
-      icon: Search,
-      status: currentStep === 'analyze' ? 'active' : 
-             ['build', 'deploy', 'complete'].includes(currentStep) ? 'completed' : 'pending'
-    },
-    {
-      id: 'build',
-      title: 'Build',
-      description: 'Compile & optimize',
-      icon: FileText,
-      status: currentStep === 'build' ? 'active' : 
-             ['deploy', 'complete'].includes(currentStep) ? 'completed' : 'pending'
-    },
-    {
-      id: 'deploy',
-      title: 'Deploy',
-      description: 'Push to production',
-      icon: Rocket,
-      status: currentStep === 'deploy' ? 'active' : 
-             currentStep === 'complete' ? 'completed' : 'pending'
-    },
-    {
-      id: 'complete',
-      title: 'Live',
-      description: 'Ready to access',
-      icon: Globe,
-      status: currentStep === 'complete' ? 'completed' : 'pending'
+const stepOrder = ['initialize', 'analyze', 'build', 'deploy', 'complete'] as const;
+
+type StepId = typeof stepOrder[number];
+
+function getStepStatus(stepId: StepId, currentStep: StepId, isAnalyzing: boolean): 'pending' | 'active' | 'completed' {
+    const currentIndex = stepOrder.indexOf(currentStep);
+    const stepIndex = stepOrder.indexOf(stepId);
+
+    if (stepId === 'initialize') {
+        return currentStep === 'initialize'
+            ? (isAnalyzing ? 'active' : 'pending')
+            : currentIndex > stepIndex ? 'completed' : 'pending';
     }
-  ];
+
+    if (stepIndex === currentIndex) return 'active';
+    if (stepIndex < currentIndex) return 'completed';
+    return 'pending';
+}
+
+export const DeploymentSteps: React.FC<DeploymentStepsProps> = ({
+    currentStep = 'initialize',
+    isAnalyzing = false,
+    }) => {
+    const steps: Step[] = [
+        {
+            id: 'initialize',
+            title: 'Initialize',
+            description: 'Repository connection',
+            icon: GitBranch,
+        },
+        {
+            id: 'analyze',
+            title: 'Analyze',
+            description: 'Code & dependencies',
+            icon: Search,
+        },
+        {
+            id: 'build',
+            title: 'Build',
+            description: 'Compile & optimize',
+            icon: FileText,
+        },
+        {
+            id: 'deploy',
+            title: 'Deploy',
+            description: 'Push to production',
+            icon: Rocket,
+        },
+        {
+            id: 'complete',
+            title: 'Live',
+            description: 'Ready to access',
+            icon: Globe,
+        },
+    ].map((step) => ({
+        ...step,
+        status: getStepStatus(step.id as StepId, currentStep as StepId, isAnalyzing),
+    }));
 
   const getStepStyles = (step: Step) => {
     const baseStyles = "relative flex flex-col items-center text-center transition-all duration-500";
