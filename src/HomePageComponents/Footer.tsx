@@ -10,9 +10,9 @@ export const Footer: React.FC = () => {
             SecuScan
           </h3>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Privacy Policy</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Terms of Service</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Contact</a>
+            <a href="/dashboard" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Privacy Policy</a>
+            <a href="/dashboard" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Terms of Service</a>
+            <a href="/dashboard" className="text-gray-400 hover:text-white transition-colors duration-300 text-xl">Contact</a>
           </div>
         </div>
 
