@@ -49,8 +49,10 @@ const RulesCard: React.FC = () => {
     }, []);
 
     const filteredRules = useMemo(() => {
-        return rules?.filter(rule => {
-            const matchesSearch = rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        if (!Array.isArray(rules)) return [];
+        return rules.filter(rule => {
+            const matchesSearch =
+                rule.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 rule.description.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesSearch;
         });
