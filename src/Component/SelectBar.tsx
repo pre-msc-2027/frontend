@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./SelectBar.css";
 import { useNavigate } from "react-router-dom";
-
 interface AnalysisData {
     scan_id: string;
     project_name: string;
@@ -62,52 +61,50 @@ export default function RepoBranchDropdown() {
     useEffect(() => {
         if (!username) return;
 
-        const fetchData = async () => {
-            try {
-                // Fetch repos with analyses
-                const repoRes = await axios.get(
-                    `http://localhost:8001/scans/summary/${username}`
-                );
+            const fetchData = async () => {
+                try {
+                    // Fetch repos + branches + analyses
+                    const repoRes = await axios.get(
+                        `http://localhost:8001/scans/summary/${username}`
+                    );
 
-                const repos: RepoData[] = repoRes.data.map((r: any) => {
-                    // Group analyses by branch_id
-                    const branchMap: Record<string, AnalysisData[]> = {};
-                    r.analyses?.forEach((a: any) => {
-                        if (!branchMap[a.branch_id]) branchMap[a.branch_id] = [];
-                        branchMap[a.branch_id].push({
-                            scan_id: a.scan_id,
-                            project_name: a.project_name,
-                            branch_id: a.branch_id,
+                    const repos: RepoData[] = repoRes.data.map((r: any) => {
+                        return {
+                            repo: r.repo_url.split("/").pop() || r.repo_url, // last part of URL
                             repo_url: r.repo_url,
-                            date: new Date().toLocaleDateString(),
-                        });
+                            branches: (r.branches_id || []).map((branch: string) => ({
+                                name: branch,
+                                analyses: (r.analyses || [])
+                                    .filter((a: any) => a.branch_id === branch)
+                                    .map((a: any) => ({
+                                        scan_id: a.scan_id,
+                                        project_name: a.project_name,
+                                        branch_id: a.branch_id,
+                                        repo_url: r.repo_url,
+                                        date: new Date().toLocaleDateString(),
+                                    })),
+                            })),
+                        };
                     });
 
-                    return {
-                        repo: r.repo_url.split("/").pop() || r.repo_url,
-                        repo_url: r.repo_url,
-                        branches: Object.entries(branchMap).map(([branch, analyses]) => ({
-                            name: branch,
-                            analyses,
-                        })),
-                    };
-                });
+                    setAddedRepos(repos);
 
-                setAddedRepos(repos);
+                    // Fetch GitHub repos (unchanged)
+                    const ghRes = await axios.get(
+                        `${import.meta.env.VITE_API_URL}/auth/repos`,
+                        { withCredentials: true }
+                    );
+                    setAvailableRepos(ghRes.data);
 
-                // Fetch available GitHub repos
-                const ghRes = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/auth/repos`,
-                    { withCredentials: true }
-                );
-                setAvailableRepos(ghRes.data);
-            } catch (err) {
-                console.error("❌ Failed to fetch data:", err);
-            }
-        };
+                } catch (err) {
+                    console.error("❌ Failed to fetch data:", err);
+                }
+            };
 
-        fetchData();
-    }, [username]);
+            fetchData();
+        }, [username]);
+
+
 
     const handleRepoClick = (repo: RepoData) => {
         if (expandedRepo === repo.repo) {
@@ -137,18 +134,18 @@ export default function RepoBranchDropdown() {
             const userInfo = await axios.get("http://localhost:5000/auth/userinfo", {
                 withCredentials: true,
             });
+
             const branchRes = await axios.get(
                 `${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`,
                 { withCredentials: true }
             );
-            const branches = branchRes.data;
-
             const payload = {
                 user: {
                     user_id: userInfo.data.username,
                     email: "placeholder@email.com",
                     name: userInfo.data.username,
                 },
+                branches_id: branchRes.data,
                 repo_url: repo.html_url,
                 rules: [
                     {
@@ -162,14 +159,29 @@ export default function RepoBranchDropdown() {
                 withCredentials: true,
             });
 
-            setAddedRepos((prev) => [
-                ...prev,
-                {
-                    repo: repo.name,
-                    repo_url: repo.html_url,
-                    branches: branches.map((b: string) => ({ name: b, analyses: [] })),
-                },
-            ]);
+            // 🔥 Refresh repos after adding
+            const repoRes = await axios.get(
+                `http://localhost:8001/scans/summary/${userInfo.data.username}`
+            );
+
+            const repos: RepoData[] = repoRes.data.map((r: any) => ({
+                repo: r.repo_url.split("/").pop() || r.repo_url,
+                repo_url: r.repo_url,
+                branches: (r.branches_id || []).map((branch: string) => ({
+                    name: branch,
+                    analyses: (r.analyses || [])
+                        .filter((a: any) => a.branch_id === branch)
+                        .map((a: any) => ({
+                            scan_id: a.scan_id,
+                            project_name: a.project_name,
+                            branch_id: a.branch_id,
+                            repo_url: r.repo_url,
+                            date: new Date().toLocaleDateString(),
+                        })),
+                })),
+            }));
+
+            setAddedRepos(repos);
             setShowModal(false);
         } catch (err: any) {
             if (err.response?.status === 400)
@@ -197,6 +209,7 @@ export default function RepoBranchDropdown() {
                     target_files: ["main.py", "utils.py"],
                     severity_min: "medium",
                     commit_hash: "",
+                    rules_id:[]
                 },
                 auth_context: {
                     user_id: username,
