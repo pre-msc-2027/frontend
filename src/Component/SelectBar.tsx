@@ -59,7 +59,9 @@ export default function RepoBranchDropdown() {
 
     // Fetch repos and analyses after username is available
     useEffect(() => {
-        if (!username) return;
+        if (!username) {
+            return;
+        }
 
             const fetchData = async () => {
                 try {
@@ -276,7 +278,7 @@ export default function RepoBranchDropdown() {
                     ) : (
                         addedRepos.map((repo) => (
                             <div key={repo.repo} className="repo-item">
-                                <div
+                                <button
                                     className={`repo-name ${
                                         expandedRepo === repo.repo ? "expanded" : ""
                                     }`}
@@ -286,7 +288,7 @@ export default function RepoBranchDropdown() {
                                     <span className="expand-icon">
                     {expandedRepo === repo.repo ? "▼" : "▶"}
                   </span>
-                                </div>
+                                </button>
                                 {expandedRepo === repo.repo && (
                                     <div className="branch-list">
                                         {repo.branches.map((branch) => {
@@ -294,7 +296,7 @@ export default function RepoBranchDropdown() {
                                             const isExpanded = expandedBranch === key;
                                             return (
                                                 <div key={branch.name} className="branch-group">
-                                                    <div
+                                                    <button
                                                         className={`branch-name ${
                                                             isExpanded ? "expanded" : ""
                                                         }`}
@@ -310,19 +312,19 @@ export default function RepoBranchDropdown() {
                                                         <span className="expand-icon">
                               {isExpanded ? "▼" : "▶"}
                             </span>
-                                                    </div>
+                                                    </button>
                                                     {isExpanded && (
                                                         <div className="analysis-list">
-                                                            <div
+                                                            <button
                                                                 className="analysis-item create-new"
                                                                 onClick={() =>
                                                                     handleCreateScan(repo, branch.name)
                                                                 }
                                                             >
                                                                 + Create new analysis
-                                                            </div>
+                                                            </button>
                                                             {branch.analyses.map((a) => (
-                                                                <div
+                                                                <button
                                                                     key={a.scan_id}
                                                                     className="analysis-item"
                                                                     onClick={() =>
@@ -333,7 +335,7 @@ export default function RepoBranchDropdown() {
                                                                     <span className="analysis-date">
                                     ({formatScanDate(a.scan_id)})
                                   </span>
-                                                                </div>
+                                                                </button>
                                                             ))}
                                                         </div>
                                                     )}
@@ -352,8 +354,8 @@ export default function RepoBranchDropdown() {
             </div>
 
             {showModal && (
-                <div className="modal-overlay" onClick={handleModalClose}>
-                    <div
+                <button className="modal-overlay" onClick={handleModalClose}>
+                    <button
                         className="modal-content"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -364,7 +366,7 @@ export default function RepoBranchDropdown() {
                             )}
                             {availableToAdd.map((repo) => (
                                 <div key={repo.id} className="repo-choice">
-                                    <div
+                                    <button
                                         className="repo-choice-content"
                                         onClick={() => handleSelectRepo(repo)}
                                     >
@@ -374,7 +376,7 @@ export default function RepoBranchDropdown() {
                                                 {repo.description}
                                             </div>
                                         )}
-                                    </div>
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -383,8 +385,8 @@ export default function RepoBranchDropdown() {
                                 Cancel
                             </button>
                         </div>
-                    </div>
-                </div>
+                    </button>
+                </button>
             )}
         </div>
     );
