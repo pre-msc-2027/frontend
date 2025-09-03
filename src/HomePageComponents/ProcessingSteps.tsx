@@ -52,7 +52,7 @@ export const ProcessingSteps: React.FC = () => {
                   </p>
               </div>
 
-              <div className="relative flex flex-row justify-center items-start gap-12 max-w-6xl mx-auto px-4 text-text">
+              <div className="relative flex flex-col md:flex-row justify-center items-center md:items-start gap-12 max-w-6xl mx-auto px-4 text-text">
                   {steps.map((step, index) => (
                       <StepItem
                           key={index}
