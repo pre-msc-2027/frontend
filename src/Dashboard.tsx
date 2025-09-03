@@ -207,9 +207,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
 
     const getCurrentStage = (analyse: ScanResult | null): number => {
         if (!analyse) return 1;
-        if (analyse.analysis.status === "pending" || analyse.analysis.status === "running") {
-            return 1;
-        }
+
         if (analyse.analysis.status === "completed") {
             return 2;
         }
@@ -220,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
         if (analyse.logs && analyse.logs.length > 0) {
             return 4;
         }
-        return 5;
+        return 1 ;
     };
 
     return (
