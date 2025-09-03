@@ -40,12 +40,12 @@ export default function RepoBranchDropdown() {
     const [showModal, setShowModal] = useState(false);
     const [expandedRepo, setExpandedRepo] = useState<string>("");
     const [expandedBranch, setExpandedBranch] = useState<string>("");
-
-    // Fetch logged-in user info
+    const baseurl= import.meta.env.VITE_API_URL
+    const baseapiUrl = import.meta.env.VITE_API_URL_BACK
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/auth/userinfo", {
+                const res = await axios.get(`${baseurl}/auth/userinfo`, {
                     withCredentials: true,
                 });
                 setUsername(res.data.username);
@@ -67,7 +67,7 @@ export default function RepoBranchDropdown() {
                 try {
                     // Fetch repos + branches + analyses
                     const repoRes = await axios.get(
-                        `http://localhost:8001/scans/summary/${username}`
+                        `${baseapiUrl}/scans/summary/${username}`
                     );
 
                     const repos: RepoData[] = repoRes.data.map((r: any) => {
@@ -133,12 +133,12 @@ export default function RepoBranchDropdown() {
 
     const handleSelectRepo = async (repo: UserRepo) => {
         try {
-            const userInfo = await axios.get("http://localhost:5000/auth/userinfo", {
+            const userInfo = await axios.get(`${baseurl}/auth/userinfo`, {
                 withCredentials: true,
             });
 
             const branchRes = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth/repos/${repo.name}/branches`,
+                `${baseurl}/auth/repos/${repo.name}/branches`,
                 { withCredentials: true }
             );
             const payload = {
@@ -157,13 +157,13 @@ export default function RepoBranchDropdown() {
                 ],
             };
 
-            await axios.post("http://localhost:8001/repositories/", payload, {
+            await axios.post(`${baseapiUrl}/repositories/`, payload, {
                 withCredentials: true,
             });
 
             // 🔥 Refresh repos after adding
             const repoRes = await axios.get(
-                `http://localhost:8001/scans/summary/${userInfo.data.username}`
+                `${baseapiUrl}/scans/summary/${userInfo.data.username}`
             );
 
             const repos: RepoData[] = repoRes.data.map((r: any) => ({
@@ -196,7 +196,7 @@ export default function RepoBranchDropdown() {
         if (!username) return;
 
         try {
-            const response = await axios.post("http://localhost:8001/scans", {
+            const response = await axios.post(`${baseapiUrl}/scans`, {
                 token: token,
                 project_name: repo.repo,
                 scanned_by: username,
@@ -223,7 +223,7 @@ export default function RepoBranchDropdown() {
 
             // Refresh data
             const repoRes = await axios.get(
-                `http://localhost:8001/scans/summary/${username}`
+                `${baseapiUrl}/scans/summary/${username}`
             );
             const repos: RepoData[] = repoRes.data.map((r: any) => {
                 const branchMap: Record<string, AnalysisData[]> = {};
