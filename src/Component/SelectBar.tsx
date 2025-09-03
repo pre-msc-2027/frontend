@@ -354,8 +354,8 @@ export default function RepoBranchDropdown() {
             </div>
 
             {showModal && (
-                <button className="modal-overlay" onClick={handleModalClose}>
-                    <button
+                <div className="modal-overlay" onClick={handleModalClose}>
+                    <div
                         className="modal-content"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -385,8 +385,8 @@ export default function RepoBranchDropdown() {
                                 Cancel
                             </button>
                         </div>
-                    </button>
-                </button>
+                    </div>
+                </div>
             )}
         </div>
     );
