@@ -9,7 +9,7 @@ console.log('CLIENT_ID:', process.env.CLIENT_ID);
 console.log('REDIRECT_URI:', process.env.REDIRECT_URI);
 // --- Middleware ---
 app.use(cors({
-    origin: 'http://localhost:5173', // frontend URL
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // frontend URL from env
     credentials: true
 }));
 app.use(express.json());
@@ -62,7 +62,7 @@ app.get('/auth/callback', async (req, res) => {
         req.session.username = userResponse.data.login;
         console.log(`✅ GitHub user authenticated: ${req.session.username}`);
 
-        res.redirect('http://localhost:5173/dashboard'); // frontend dashboard
+        res.redirect(`${process.env.FRONTEND_URL}/dashboard`); // frontend dashboard
     } catch (err) {
         console.error(err.response?.data || err.message);
         res.status(500).send('Erreur serveur');
