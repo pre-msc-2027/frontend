@@ -22,7 +22,8 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
-        return Promise.reject(error);
+        const rejectionReason = error instanceof Error ? error : new Error(JSON.stringify(error));
+        return Promise.reject(rejectionReason);
     }
 );
 
