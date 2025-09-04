@@ -279,7 +279,7 @@ export default function RepoBranchDropdown() {
                         addedRepos.map((repo) => (
                             <div key={repo.repo} className="repo-item">
                                 <button
-                                    className={`repo-name ${
+                                    className={`repo-name w-full ${
                                         expandedRepo === repo.repo ? "expanded" : ""
                                     }`}
                                     onClick={() => handleRepoClick(repo)}
@@ -297,7 +297,7 @@ export default function RepoBranchDropdown() {
                                             return (
                                                 <div key={branch.name} className="branch-group">
                                                     <button
-                                                        className={`branch-name ${
+                                                        className={`branch-name w-full  ${
                                                             isExpanded ? "expanded" : ""
                                                         }`}
                                                         onClick={() => handleBranchClick(repo, branch.name)}
@@ -316,7 +316,7 @@ export default function RepoBranchDropdown() {
                                                     {isExpanded && (
                                                         <div className="analysis-list">
                                                             <button
-                                                                className="analysis-item create-new"
+                                                                className="analysis-item create-new w-full"
                                                                 onClick={() =>
                                                                     handleCreateScan(repo, branch.name)
                                                                 }
