@@ -9,7 +9,7 @@ export interface RegexOptions {
 
 export type RuleParameterType = "enum" | "boolean" | "regex" | string;
 
-interface RuleParameterOptions {
+export interface RuleParameterOptions {
   low?: number;
   medium?: number;
   high?: number;
