@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import PieChart from "./Component/PieChart.tsx";
 import RulesCard from "./Component/RulesCard.tsx";
+import AddRuleModal from "./Component/AddRuleModal";
+import type { ConfiguredRule } from "./Component/types";
 import RepoBranchDropdown from "./Component/SelectBar.tsx";
 import Navbar from "./Component/NavBar.tsx";
 import LogsDashboard from "./Component/LogsDashboard.tsx";
@@ -108,6 +110,9 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const [isCreatingScan, setIsCreatingScan] = useState(false);
     const baseapiUrl = import.meta.env.VITE_API_URL_BACK
     const baseurl= import.meta.env.VITE_API_URL
+    const [isAddRuleOpen, setIsAddRuleOpen] = useState(false);
+    const [configuredRules, setConfiguredRules] = useState<ConfiguredRule[]>([]);
+
     const [selectedRules, setSelectedRules] = useState<string[]>([]);
 
     // Fetch logged-in user info
@@ -286,6 +291,16 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                             {/* Right half - Rules Card */}
                             <div className="md:w-2/4 lg:h-full">
                                 <div className="rules-card h-full">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <h2 className="glass-title mb-0">Security Rules</h2>
+                                        <button
+                                            className="glass-card px-3 py-2 text-sm hover:scale-105 transition-transform"
+                                            onClick={() => setIsAddRuleOpen(true)}
+                                        >
+                                            Add Rule
+                                        </button>
+                                    </div>
+                                    <RulesCard />
                                     <h2 className="glass-title">Security Rules</h2>
                                     <RulesCard
                                         selectedRules={selectedRules}
@@ -314,6 +329,14 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                     </div>
                 </div>
             </div>
+            <AddRuleModal
+                isOpen={isAddRuleOpen}
+                onClose={() => setIsAddRuleOpen(false)}
+                onSubmit={(rule) => {
+                    setConfiguredRules((prev) => [...prev, rule]);
+                    console.log("Configured rule added:", rule);
+                }}
+            />
         </div>
     );
 };
