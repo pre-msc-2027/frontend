@@ -83,6 +83,6 @@ To enable GitHub login, make sure to run the api:
 
 ---
 
-🙌 Credits
+## 🙌 Credits
 Built with ❤️ using React & TailwindCSS
 For any questions or suggestions, feel free create a issue, we will do our best to answer it.    
