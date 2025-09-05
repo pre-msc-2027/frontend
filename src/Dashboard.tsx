@@ -113,6 +113,8 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const [isAddRuleOpen, setIsAddRuleOpen] = useState(false);
     const [configuredRules, setConfiguredRules] = useState<ConfiguredRule[]>([]);
 
+    const [selectedRules, setSelectedRules] = useState<string[]>([]);
+
     // Fetch logged-in user info
     useEffect(() => {
         const fetchUser = async () => {
@@ -234,7 +236,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
             {/* Header */}
             <div className=" flex-none flex flex-row justify-between items-center p-4">
                 <div className="w-full md:w-3/4">
-                    <RepoBranchDropdown />
+                    <RepoBranchDropdown selectedRules={selectedRules} />
                 </div>
                 <div className="md:w-fit">
                     <Navbar />
@@ -299,6 +301,12 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                                         </button>
                                     </div>
                                     <RulesCard />
+                                    <h2 className="glass-title">Security Rules</h2>
+                                    <RulesCard
+                                        selectedRules={selectedRules}
+                                        onSelectedRulesChange={setSelectedRules}
+                                    />
+
                                 </div>
                             </div>
                         </div>

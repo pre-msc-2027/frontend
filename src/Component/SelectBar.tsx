@@ -31,7 +31,11 @@ interface UserRepo {
     branches?: string[];
 }
 
-export default function RepoBranchDropdown() {
+interface RepoBranchDropdownProps {
+    selectedRules: string[];
+}
+
+export default function RepoBranchDropdown({ selectedRules }: RepoBranchDropdownProps) {
     const navigate = useNavigate();
     const [username, setUsername] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
@@ -211,7 +215,7 @@ export default function RepoBranchDropdown() {
                     target_files: ["main.py", "utils.py"],
                     severity_min: "medium",
                     commit_hash: "",
-                    rules_id:[]
+                    rules_id:selectedRules,
                 },
                 auth_context: {
                     user_id: username,
