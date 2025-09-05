@@ -309,7 +309,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                     <div className="w-full lg:w-2/5 logs-card flex flex-col overflow-hidden">
                         <h2 className="glass-title">System Logs</h2>
                         <div className="flex-1 overflow-hidden">
-                            <LogsDashboard logs={analyse?.logs}/>
+                            <LogsDashboard logs={analyse?.logs} ai_comment={analyse?.ai_comment} Analysis={analyse?.analysis.warnings}/>
                         </div>
                     </div>
                 </div>
