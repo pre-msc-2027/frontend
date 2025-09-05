@@ -293,24 +293,18 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="flex items-center justify-between gap-3">
                                         <h2 className="glass-title mb-0 mb-0">Security Rules</h2>
-                                        <button
-                                            className="glass-card px-3 py-2 text-sm hover:scale-105 transition-transform"
-                                            onClick={() => setIsAddRuleOpen(true)}
-                                        >
-                                            Add Rule
-                                        </button>
-                                    </div>
-                                    <div className='m-4'>
-
                                     </div>
                                         <button
                                             className="glass-card px-3 py-2 text-sm hover:scale-105 transition-transform"
                                             onClick={() => setIsAddRuleOpen(true)}
                                         >
-                                            Add Rule
+                                            Edit Rule
                                         </button>
                                     </div>
-                                    <RulesCard />
+                                    <RulesCard
+                                        selectedRules={selectedRules}
+                                        onSelectedRulesChange={setSelectedRules}
+                                    />
                                 </div>
                             </div>
                         </div>
