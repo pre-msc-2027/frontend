@@ -4,7 +4,14 @@ import { Search } from "lucide-react";
 import "./RulesCard.css";
 import axios from "axios";
 
-const RulesCard: React.FC = () => {
+
+interface RulesCardProps {
+    selectedRules?: string[];
+    onSelectedRulesChange: (rules: string[]) => void;
+}
+
+const RulesCard: React.FC<RulesCardProps> = ({ selectedRules = [], onSelectedRulesChange }) => {
+
 
     const [rules, setRules] = useState<Rule[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
