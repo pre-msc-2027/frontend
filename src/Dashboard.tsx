@@ -300,8 +300,9 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                                             Add Rule
                                         </button>
                                     </div>
-                                    <RulesCard />
-                                    <h2 className="glass-title">Security Rules</h2>
+                                    <div className='m-4'>
+
+                                    </div>
                                     <RulesCard
                                         selectedRules={selectedRules}
                                         onSelectedRulesChange={setSelectedRules}
@@ -324,7 +325,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                     <div className="w-full lg:w-2/5 logs-card flex flex-col overflow-hidden">
                         <h2 className="glass-title">System Logs</h2>
                         <div className="flex-1 overflow-hidden">
-                            <LogsDashboard logs={analyse?.logs} ai_comment={analyse?.ai_comment} Analysis={analyse?.analysis.warnings}/>
+                            <LogsDashboard logs={analyse?.logs} ai_comment={analyse?.ai_comment} Analysis={analyse?.analysis?.warnings}/>
                         </div>
                     </div>
                 </div>
