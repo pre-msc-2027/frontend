@@ -1,36 +1,18 @@
 import React, {useState, useMemo, useEffect} from "react";
+import type { RuleParameterOptions, RuleParameter, Rule } from "./types";
 import { Search } from "lucide-react";
 import "./RulesCard.css";
 import axios from "axios";
 
-interface RuleParameterOptions {
-    low?: number;
-    medium?: number;
-    high?: number;
-    [key: string]: any;
-}
 
-interface RuleParameter {
-    type: string;
-    name: string;
-    default: string | number | boolean;
-    description: string;
-    options?: RuleParameterOptions;
-}
-
-interface Rule {
-    rule_id: string;
-    name: string;
-    description: string;
-    tags: string[];
-    parameters: RuleParameter[];
-}
 interface RulesCardProps {
-    selectedRules: string[];
+    selectedRules?: string[];
     onSelectedRulesChange: (rules: string[]) => void;
 }
 
-const RulesCard: React.FC<RulesCardProps> = ({ selectedRules, onSelectedRulesChange }) => {
+const RulesCard: React.FC<RulesCardProps> = ({ selectedRules = [], onSelectedRulesChange }) => {
+
+
     const [rules, setRules] = useState<Rule[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
