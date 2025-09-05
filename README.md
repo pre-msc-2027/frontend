@@ -1,54 +1,88 @@
-# React + TypeScript + Vite
+# 🔒 Secu Scan
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Secu Scan** is a responsive and modern frontend web application built with **React** and **TailwindCSS**, providing users with a clean dashboard to visualize various security metrics and logs. It features GitHub authentication, a light/dark theme toggle, and a suite of interactive UI components.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🖥️ **Landing Page** with GitHub login
+- 🔐 **GitHub OAuth Integration** — connect with your GitHub account to retrieve access tokens (handled by a frontend API call)
+- 📊 **Dashboard** with:
+  - Logs viewer
+  - Pie charts and visual stats
+  - Custom rule displays
+  - Step-by-step progress indicators
+- 🌗 **Dark & Light Theme** switcher
+- 📱 Fully **Responsive** (Mobile & Desktop support)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🛠️ Tech Stack
+
+- **React** — UI Library
+- **TailwindCSS** — Utility-first CSS framework
+- **React Router** — Client-side routing
+- **Chart.js** — For visual components like pie charts
+
+---
+
+## 🔧 Project Structure
+
+```bash
+secu-scan/
+├── public/
+├── src/
+│   ├── Api/
+│   ├── assets/
+│   ├── Component/              # GitHub connection handler
+│   ├── HomePageComponent/
+│   └── ...
+├── composo.yml
+├── Dockerfile
+├── vite.config.ts
+├── package.json
+├── .env
+└── README.md
+````
+
+---
+
+## 🧪 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/pre-msc-2027/frontend.git
+cd secu-scan
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
 ```
+
+### 3. Start the development server
+
+```bash
+npm run dev
+```
+
+The app should now be running at `http://localhost:5173/` (or similar, depending on your dev setup).
+
+---
+
+## 🧩 GitHub OAuth Setup
+
+To enable GitHub login, make sure to run the api:
+
+1. ```bash
+    node .\src\Api\server.js
+    ```
+
+---
+
+🙌 Credits
+Built with ❤️ using React & TailwindCSS
+For any questions or suggestions, feel free create a issue, we will do our best to answer it.    
