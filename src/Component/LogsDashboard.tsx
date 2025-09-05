@@ -8,35 +8,66 @@ interface Log {
     error?: number | null;
 }
 
+interface AI {
+    warning_id: number;
+    original: string;
+    fixed: string;
+}
+
+interface Analysis{
+    file: string;
+    line: number;
+    rule_id: number;
+    id: number;
+}
+
 interface LogsDashboardProps {
     logs?: Log[];
+    Analysis?: Analysis[];
+    ai_comment?: AI[];
 }
 
 const levelIcons = {
-    info: <Info size={16} className="text-blue-400" />,
-    warning: <AlertTriangle size={16} className="text-yellow-400" />,
-    error: <AlertCircle size={16} className="text-red-400" />
+    Logs: <Info size={16} className="text-blue-400" />,
+    Analysis: <AlertTriangle size={16} className="text-yellow-400" />,
+    AI: <AlertCircle size={16} className="text-red-400" />
 };
 
-const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [] }) => {
+const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [], Analysis = [], ai_comment = [],}) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedLevels, setSelectedLevels] = useState<string[]>(['info', 'warning', 'error']);
+    const [selectedLevels, setSelectedLevels] = useState<string[]>(['Logs', 'Analysis', 'AI']);
 
-    const logsWithLevel = useMemo(() => {
-        return logs.map(log => {
-            let level: 'info' | 'warning' | 'error' = 'info';
-            if (log.error === 1) level = 'warning';
-            else if (log.error === 2) level = 'error';
-            return { ...log, level };
-        });
-    }, [logs]);
+    const unifiedData = useMemo(() => {
+        const logEntries = logs.map(log => ({
+            type: 'Logs',
+            timestamp: log.timestamp,
+            message: log.message,
+            level: 'info'
+        }));
+
+        const analysisEntries = Analysis.map(item => ({
+            type: 'Analysis',
+            timestamp: Date.now(),
+            message: `Rule ${item.rule_id} violation at ${item.file}:${item.line}`,
+            level: 'warning'
+        }));
+
+        const aiEntries = ai_comment.map(item => ({
+            type: 'AI',
+            timestamp: Date.now(),
+            message: `AI Suggestion: ${item.original} → ${item.fixed}`,
+            level: 'info'
+        }));
+
+        return [...logEntries, ...analysisEntries, ...aiEntries];
+    }, [logs, Analysis, ai_comment]);
 
     const filteredLogs = useMemo(() => {
-        return logsWithLevel.filter(log =>
-            log.message.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            selectedLevels.includes(log.level)
+        return unifiedData.filter(entry =>
+            entry.message.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            selectedLevels.includes(entry.type)
         );
-    }, [logsWithLevel, searchTerm, selectedLevels]);
+    }, [unifiedData, searchTerm, selectedLevels]);
 
     const handleLevelToggle = (level: string) => {
         setSelectedLevels(prev =>
@@ -61,11 +92,12 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [] }) => {
         };
     };
 
-    const logCounts = {
-        info: logsWithLevel.filter(log => log.level === 'info').length,
-        warning: logsWithLevel.filter(log => log.level === 'warning').length,
-        error: logsWithLevel.filter(log => log.level === 'error').length
-    };
+    const logCounts = useMemo(() => ({
+        Logs: unifiedData.filter(entry => entry.type === 'Logs').length,
+        Analysis: unifiedData.filter(entry => entry.type === 'Analysis').length,
+        AI: unifiedData.filter(entry => entry.type === 'AI').length
+    }), [unifiedData]);
+
 
     return (
         <div className="logs-dashboard">
@@ -84,7 +116,7 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [] }) => {
 
                 {/* Level Filters */}
                 <div className="level-filters">
-                    {(['info', 'warning', 'error'] as const).map(level => (
+                    {(['Logs', 'Analysis', 'AI'] as const).map(level => (
                         <label key={level} className={`level-checkbox ${level}`}>
                             <input
                                 type="checkbox"
@@ -110,12 +142,12 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [] }) => {
                     </div>
                 ) : (
                     <div className="logs-table-body">
-                        {filteredLogs.map((log, index) => {
-                            const { date, time } = formatTimestamp(log.timestamp);
+                        {filteredLogs.map((entry, index) => {
+                            const { date, time } = formatTimestamp(entry.timestamp);
                             return (
                                 <div
                                     key={index}
-                                    className={`log-row ${getLogLevelClass(log.level)}`}
+                                    className={`log-row ${getLogLevelClass(entry.level)}`}
                                     style={{ '--animation-delay': `${index * 0.02}s` } as React.CSSProperties}
                                 >
                                     <div className="log-cell timestamp">
@@ -124,11 +156,11 @@ const LogsDashboard: React.FC<LogsDashboardProps> = ({ logs = [] }) => {
                                     </div>
                                     <div className="log-cell level">
                                         <div className="level-badge">
-                                            {levelIcons[log.level]}
-                                            <span>{log.level}</span>
+                                            {levelIcons[entry.type as keyof typeof levelIcons]}
+                                            <span>{entry.type}</span>
                                         </div>
                                     </div>
-                                    <div className="log-cell message">{log.message}</div>
+                                    <div className="log-cell message">{entry.message}</div>
                                 </div>
                             );
                         })}
