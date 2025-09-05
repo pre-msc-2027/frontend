@@ -108,6 +108,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
     const [isCreatingScan, setIsCreatingScan] = useState(false);
     const baseapiUrl = import.meta.env.VITE_API_URL_BACK
     const baseurl= import.meta.env.VITE_API_URL
+    const [selectedRules, setSelectedRules] = useState<string[]>([]);
 
     // Fetch logged-in user info
     useEffect(() => {
@@ -230,7 +231,7 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
             {/* Header */}
             <div className=" flex-none flex flex-row justify-between items-center p-4">
                 <div className="w-full md:w-3/4">
-                    <RepoBranchDropdown />
+                    <RepoBranchDropdown selectedRules={selectedRules} />
                 </div>
                 <div className="md:w-fit">
                     <Navbar />
@@ -286,7 +287,11 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
                             <div className="md:w-2/4 lg:h-full">
                                 <div className="rules-card h-full">
                                     <h2 className="glass-title">Security Rules</h2>
-                                    <RulesCard />
+                                    <RulesCard
+                                        selectedRules={selectedRules}
+                                        onSelectedRulesChange={setSelectedRules}
+                                    />
+
                                 </div>
                             </div>
                         </div>

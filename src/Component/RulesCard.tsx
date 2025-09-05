@@ -25,10 +25,13 @@ interface Rule {
     tags: string[];
     parameters: RuleParameter[];
 }
+interface RulesCardProps {
+    selectedRules: string[];
+    onSelectedRulesChange: (rules: string[]) => void;
+}
 
-const RulesCard: React.FC = () => {
+const RulesCard: React.FC<RulesCardProps> = ({ selectedRules, onSelectedRulesChange }) => {
     const [rules, setRules] = useState<Rule[]>([]);
-    const [selectedRules, setSelectedRules] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
     const baseapiUrl = import.meta.env.VITE_API_URL_BACK
@@ -59,8 +62,10 @@ const RulesCard: React.FC = () => {
     }, [rules, searchTerm]);
 
     const handleRuleToggle = (ruleId: string) => {
-        setSelectedRules(prev =>
-            prev.includes(ruleId) ? prev.filter(id => id !== ruleId) : [...prev, ruleId]
+        onSelectedRulesChange(
+            selectedRules.includes(ruleId)
+                ? selectedRules.filter(id => id !== ruleId)
+                : [...selectedRules, ruleId]
         );
     };
 

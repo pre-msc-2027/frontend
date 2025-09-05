@@ -318,7 +318,7 @@ export const scanService = {
     // Get analysis with rules
     getAnalysisWithRules: async (scanId: string): Promise<{ analysis: Analysis; rules: Rule[] }> => {
         try {
-            const response = await api.get(`/scans/analyse_with_rules/${scanId}`);
+            const response = await api.get(`/scans/analyse/${scanId}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching analysis with rules:', error);
@@ -327,7 +327,6 @@ export const scanService = {
     }
 };
 
-// Repository Services
 export const repositoryService = {
     // Get user repositories
     getUserRepositories: async (userId: string): Promise<Repository[]> => {
