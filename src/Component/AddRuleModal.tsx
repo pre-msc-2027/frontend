@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { mockRules } from "./mockRules";
-import type { ConfiguredParameters, ConfiguredRule, Rule } from "./types";
+import type { Rule, RuleParameter, ConfiguredRule } from "./types";
+import axios from "axios";
+
+type FormValues = Record<string, unknown>; 
 
 interface AddRuleModalProps {
   isOpen: boolean;
@@ -9,19 +11,33 @@ interface AddRuleModalProps {
 }
 
 const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [rules] = useState<Rule[]>(mockRules);
+ const [rules, setRules] = useState<Rule[]>([]);
+  const baseurl = import.meta.env.VITE_API_URL as string;
   const [selectedRuleId, setSelectedRuleId] = useState<string>("");
   const selectedRule = useMemo(
     () => rules.find((r) => r.rule_id === selectedRuleId) || null,
     [rules, selectedRuleId]
   );
-    
-  const [formValues, setFormValues] = useState<ConfiguredParameters>({});
+
+  const [formValues, setFormValues] = useState<FormValues>({});
   const [regexInputs, setRegexInputs] = useState<Record<string, string>>({});
+
+  // Fetch rules in db
+  useEffect(() => {
+    const getRules = async () => {
+      try {
+        const res = await axios.get(`${baseurl}/rules`, { withCredentials: true });
+        setRules(res.data);
+      } catch (err) {
+        console.error("❌ Failed to fetch rules in db:", err);
+      }
+    };
+    if (isOpen) getRules(); 
+  }, [baseurl, isOpen]);
 
   useEffect(() => {
     if (!selectedRule) return;
-    const defaults: ConfiguredParameters = {};
+    const defaults: FormValues = {};
     selectedRule.parameters.forEach((p) => {
       defaults[p.name] = p.default;
     });
@@ -46,7 +62,7 @@ const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }
   const handleRegexAdd = (name: string) => {
     const v = (regexInputs[name] || "").trim();
     if (!v) return;
-    const current: string[] = Array.isArray(formValues[name]) ? formValues[name] : [];
+    const current: string[] = Array.isArray(formValues[name]) ? (formValues[name] as string[]) : [];
     if (!current.includes(v)) {
       setFormValues((prev) => ({ ...prev, [name]: [...current, v] }));
     }
@@ -54,14 +70,47 @@ const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }
   };
 
   const handleRegexRemove = (name: string, idx: number) => {
-    const current: string[] = Array.isArray(formValues[name]) ? formValues[name] : [];
+    const current: string[] = Array.isArray(formValues[name]) ? (formValues[name] as string[]) : [];
     const next = current.filter((_, i) => i !== idx);
     setFormValues((prev) => ({ ...prev, [name]: next }));
   };
 
-  const submit = () => {
+  const buildConfiguredParameters = (schema: Rule["parameters"], values: FormValues): RuleParameter[] =>
+    schema.map((p) => ({
+      ...p,
+      default: values[p.name] ?? p.default,
+    }));
+
+  const submit = async () => {
     if (!selectedRule) return;
-    onSubmit({ rule_id: selectedRule.rule_id, name: selectedRule.name, parameters: formValues });
+
+    const parametersArray: RuleParameter[] = buildConfiguredParameters(
+      selectedRule.parameters,
+      formValues
+    );
+
+    try {
+      const res = await fetch(`${baseurl}/rules/modif_param/${selectedRule.rule_id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", 
+        body: JSON.stringify(parametersArray),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+    } catch (e) {
+      console.error("❌ Failed to modify rule parameters:", e);
+    }
+
+    onSubmit({
+      rule_id: selectedRule.rule_id,
+      name: selectedRule.name,
+      parameters: parametersArray,
+    });
+
     onClose();
   };
 
@@ -112,7 +161,7 @@ const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }
                       {param.options?.multiple ? (
                         <div className="flex flex-wrap gap-2">
                           {(param.options?.allowed || []).map((opt: string) => {
-                            const current: string[] = Array.isArray(formValues[param.name]) ? formValues[param.name] : [];
+                            const current: string[] = Array.isArray(formValues[param.name]) ? (formValues[param.name] as string[]) : [];
                             const checked = current.includes(opt);
                             const toggle = () => {
                               const next = checked ? current.filter((v) => v !== opt) : [...current, opt];
@@ -170,7 +219,7 @@ const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }
                         </button>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {(Array.isArray(formValues[param.name]) ? formValues[param.name] : []).map((val: string, idx: number) => (
+                        {(Array.isArray(formValues[param.name]) ? (formValues[param.name] as string[]) : []).map((val: string, idx: number) => (
                           <span key={`${val}-${idx}`} className="px-2 py-1 rounded-md border border-white/20 text-sm inline-flex items-center gap-2">
                             {val}
                             <button type="button" className="opacity-70 hover:opacity-100" onClick={() => handleRegexRemove(param.name, idx)}>
@@ -193,7 +242,7 @@ const AddRuleModal: React.FC<AddRuleModalProps> = ({ isOpen, onClose, onSubmit }
             <div className="flex justify-end gap-2 pt-2">
               <button className="px-3 py-2" onClick={onClose}>Cancel</button>
               <button className="px-3 py-2 glass-card" onClick={submit}>
-                Add Rule
+                Edit Rule
               </button>
             </div>
           </div>

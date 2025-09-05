@@ -32,7 +32,7 @@ export interface Rule {
   parameters: RuleParameter[];
 }
 
-export type ConfiguredParameters = { [paramName: string]: any };
+export type ConfiguredParameters = RuleParameter[];
 
 export interface ConfiguredRule {
   rule_id: string;
