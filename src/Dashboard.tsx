@@ -134,7 +134,6 @@ const Dashboard: React.FC<DashboardProps> = ({ scanId }) => {
             );
 
             setAnalyse(response.data);
-            console.log(analyse);
 
         } catch (err) {
             console.error("Error fetching available scan:", err);
